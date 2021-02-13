@@ -1,8 +1,9 @@
 import { systems } from 'constants/systems';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Canvas, useFrame, useThree } from "react-three-fiber";
 
+import { TrackballControls } from './TrackBallControls';
 import SolarSystem from './SolarSystem';
 
 import './Application.scss';
@@ -19,13 +20,12 @@ const useEventListener = (eventName, handler) => {
 
 const keyPressed = {};
 
-const Application = () => {
-  
+const Camera = () => {
   const { mouse, camera } = useThree();
 
   const handleKeyDown = (e) => {
     if (!keyPressed[e.key]) {
-        keyPressed[e.key] = new Date().getTime();
+      keyPressed[e.key] = new Date().getTime();
     }
   };
 
@@ -48,8 +48,15 @@ const Application = () => {
   };
 
   useEventListener('keydown', handleKeyDown);
+
   useEventListener('keyup', handleKeyUp);
+
   useEventListener('wheel', mouseWheel);
+
+  useEffect(() => {
+    // const canvas = document.querySelector('canvas');
+    // new TrackballControls(camera, canvas);
+  }, []);
   
   useFrame((_, delta) => {
     Object.entries(keyPressed).forEach((e) => {
@@ -70,17 +77,28 @@ const Application = () => {
         case 's': camera.translateY(-momentum); break;
         case 'd': camera.translateX(momentum); break;
         case 'a': camera.translateX(-momentum); break;
+        case 'x': camera.translateZ(momentum); break;
+        case 'z': camera.translateZ(-momentum); break;
+        case 'e': camera.rotateY(-0.01); break;
+        case 'q': camera.rotateY(0.01); break;
+        case 'c': camera.rotateX(-0.01); break;
+        
         default:
       }
     });
   });
 
+  return null;
+}
+
+const Application = () => {
+
   return (
     <Canvas>
-      <perspectiveCamera far={1000000000000} fov={1000000} />
+      <Camera />
+      <ambientLight />
 
-      {systems.slice(0, 2000).map(info => <SolarSystem info={info} />)}
-      
+      {systems.map(info => <SolarSystem info={info} />)}
     </Canvas>
   );
 }

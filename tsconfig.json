@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "jsx": "react",
+    "target": "es6",
+    "module": "ESNext",
+    "sourceMap": true,
+    "declaration": false,
+    "importHelpers": true,
+    "removeComments": true,
+    "resolveJsonModule": true,
+    "strictNullChecks": false,
+    "moduleResolution": "node",
+    "outDir": "./build/dist",
+    "lib": ["es6", "es5", "dom"], 
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "./",
+    "paths": {
+      "*": [
+        "src/*"
+      ]
+    }
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}

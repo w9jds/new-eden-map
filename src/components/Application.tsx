@@ -1,10 +1,7 @@
-import { systems } from 'constants/systems';
-
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { Canvas, useFrame, useThree } from "react-three-fiber";
 
-import { TrackballControls } from './TrackBallControls';
-import SolarSystem from './SolarSystem';
+import NewEden from './NewEden';
 
 import './Application.scss';
 
@@ -21,7 +18,7 @@ const useEventListener = (eventName, handler) => {
 const keyPressed = {};
 
 const Camera = () => {
-  const { mouse, camera } = useThree();
+  const { camera } = useThree();
 
   const handleKeyDown = (e) => {
     if (!keyPressed[e.key]) {
@@ -54,8 +51,8 @@ const Camera = () => {
   useEventListener('wheel', mouseWheel);
 
   useEffect(() => {
-    // const canvas = document.querySelector('canvas');
-    // new TrackballControls(camera, canvas);
+    camera.position.set(-249.34440590016584, 629.4197665095272, 60.56822928340066);
+    camera.rotation.set(-1.5058901083058618, -0.14537999988034336, -0.58833952068214);
   }, []);
   
   useFrame((_, delta) => {
@@ -73,12 +70,12 @@ const Camera = () => {
       momentum = momentum + camera.position.z * 0.02;
 
       switch (key) {
-        case 'w': camera.translateY(momentum); break;
-        case 's': camera.translateY(-momentum); break;
-        case 'd': camera.translateX(momentum); break;
-        case 'a': camera.translateX(-momentum); break;
-        case 'x': camera.translateZ(momentum); break;
-        case 'z': camera.translateZ(-momentum); break;
+        case 'w': camera.translateY(0.5); break;
+        case 's': camera.translateY(-0.5); break;
+        case 'd': camera.translateX(0.5); break;
+        case 'a': camera.translateX(-0.5); break;
+        case 'x': camera.translateZ(0.5); break;
+        case 'z': camera.translateZ(-0.5); break;
         case 'e': camera.rotateY(-0.01); break;
         case 'q': camera.rotateY(0.01); break;
         case 'c': camera.rotateX(-0.01); break;
@@ -96,9 +93,7 @@ const Application = () => {
   return (
     <Canvas>
       <Camera />
-      <ambientLight />
-
-      {systems.map(info => <SolarSystem info={info} />)}
+      <NewEden />
     </Canvas>
   );
 }

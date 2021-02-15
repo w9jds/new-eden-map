@@ -49,6 +49,7 @@ const Region = ({ data }: Props) => {
 
   return (
     <group name={data.name}>
+      <Connections connections={connections} />
       <Stars solarSystems={Object.values(solarSystems)} />
     </group>
   );

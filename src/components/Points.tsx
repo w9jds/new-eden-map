@@ -6,7 +6,7 @@ const VERTEX_SHADER = `
   attribute float size;
   attribute vec3 flareColor;
   varying vec3 vColor;
-  
+
   void main() {
     vColor = flareColor;
     vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
@@ -40,9 +40,8 @@ const Points = forwardRef((props, ref) => (
       uniforms={uniforms}
       vertexShader={VERTEX_SHADER}
       fragmentShader={FRAGMENT_SHADER}
-      blending={THREE.AdditiveBlending}
-      depthTest={false}
-      transparent={false}
+      
+
     />
   </points>
 ))

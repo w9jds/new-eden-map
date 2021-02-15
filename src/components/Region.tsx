@@ -3,8 +3,9 @@ import { systems } from 'constants/systems';
 
 import React, { useMemo, useEffect } from 'react';
 
-import { Region } from 'models/universe';
+import { Region, System } from 'models/universe';
 import Stars from './Stars';
+import Connections from './Connections';
 
 type Props = {
   data: Region;
@@ -12,7 +13,7 @@ type Props = {
 
 const Region = ({ data }: Props) => {
   
-  const solarSystems = useMemo(() => {
+  const solarSystems: Record<number, System> = useMemo(() => {
     const info = {};
 
     for (let id of data.constellations) {
@@ -25,6 +26,26 @@ const Region = ({ data }: Props) => {
 
     return info;
   }, [data]);
+
+  const connections = useMemo(() => {
+    const segments = {};
+
+    for (let system of Object.values(solarSystems)) {
+      if (system.connections) {
+        for (let destination of system.connections) {
+          if (!segments[destination] || segments[destination].indexOf(system.id) == -1) {
+            if (!segments[system.id]) {
+              segments[system.id] = [destination];
+            } else {
+              segments[system.id].push(destination);
+            }
+          }
+        }
+      }
+    }
+    
+    return segments;
+  }, [solarSystems]);
 
   return (
     <group name={data.name}>

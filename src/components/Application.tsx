@@ -51,7 +51,7 @@ const Camera = () => {
   useEventListener('wheel', mouseWheel);
 
   useEffect(() => {
-    camera.position.set(-249.34440590016584, 629.4197665095272, 60.56822928340066);
+    camera.position.set(-151.87514771056715, 653.1205980784633, -84.05201235278793);
     camera.rotation.set(-1.5058901083058618, -0.14537999988034336, -0.58833952068214);
   }, []);
   

@@ -6,6 +6,7 @@ const VERTEX_SHADER = `
   attribute float size;
   attribute vec3 flareColor;
   varying vec3 vColor;
+  
   void main() {
     vColor = flareColor;
     vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
@@ -18,6 +19,7 @@ const FRAGMENT_SHADER = `
   uniform vec3 color;
   uniform sampler2D pointTexture;
   varying vec3 vColor;
+
   void main() {
     gl_FragColor = vec4(color * vColor, 1.0);
     gl_FragColor = gl_FragColor * texture2D( pointTexture, gl_PointCoord );
@@ -40,7 +42,7 @@ const Points = forwardRef((props, ref) => (
       fragmentShader={FRAGMENT_SHADER}
       blending={THREE.AdditiveBlending}
       depthTest={false}
-      transparent={true}
+      transparent={false}
     />
   </points>
 ))

@@ -26,7 +26,7 @@ const Stars = ({ solarSystems }: Props) => {
       return;
     }
 
-    const colorMaxSec = new THREE.Color('#39b4f1')
+    const colorMaxSec = new THREE.Color('#39b4f1');
 
     const count = solarSystems.length;
 

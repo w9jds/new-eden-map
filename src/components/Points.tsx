@@ -40,8 +40,6 @@ const Points = forwardRef((props, ref) => (
       uniforms={uniforms}
       vertexShader={VERTEX_SHADER}
       fragmentShader={FRAGMENT_SHADER}
-
-
     />
   </points>
 ))

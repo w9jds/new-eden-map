@@ -70,15 +70,19 @@ const Camera = () => {
       momentum = momentum + camera.position.z * 0.02;
 
       switch (key) {
-        case 'w': camera.translateY(0.5); break;
-        case 's': camera.translateY(-0.5); break;
-        case 'd': camera.translateX(0.5); break;
-        case 'a': camera.translateX(-0.5); break;
-        case 'x': camera.translateZ(0.5); break;
-        case 'z': camera.translateZ(-0.5); break;
-        case 'e': camera.rotateY(-0.01); break;
-        case 'q': camera.rotateY(0.01); break;
-        case 'c': camera.rotateX(-0.01); break;
+        case 'w': camera.translateY(5); break;
+        case 's': camera.translateY(-5); break;
+        case 'd': camera.translateX(5); break;
+        case 'a': camera.translateX(-5); break;
+        case 'x': camera.translateZ(5); break;
+        case 'z': camera.translateZ(-5); break;
+
+        case 't': camera.rotateY(-0.01); break;
+        case 'y': camera.rotateY(0.01); break;
+        case 'g': camera.rotateX(-0.01); break;
+        case 'h': camera.rotateX(0.01); break;
+        case 'b': camera.rotateZ(-0.01); break;
+        case 'n': camera.rotateZ(0.01); break;
 
         default:
       }

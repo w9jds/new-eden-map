@@ -1,13 +1,38 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useMemo } from 'react';
 
-import { regions } from 'constants/regions';
+import { systems } from 'constants/systems';
 
-import Region from './Region';
+import Stars from './Stars';
+import Connections from './Connections';
 
-const NewEden = () => (
-  <Fragment>
-    {regions.map(region => <Region data={region} />)}
-  </Fragment>
-);
+const NewEden = () => {
+
+  const connections = useMemo(() => {
+    const segments = {};
+
+    for (let system of Object.values(systems)) {
+      if (system.connections) {
+        for (let destination of system.connections) {
+          if (!segments[destination] || segments[destination].indexOf(system.id) == -1) {
+            if (!segments[system.id]) {
+              segments[system.id] = [destination];
+            } else {
+              segments[system.id].push(destination);
+            }
+          }
+        }
+      }
+    }
+
+    return segments;
+  }, []);
+
+  return (
+    <Fragment>
+      <Connections connections={connections} />
+      <Stars solarSystems={Object.values(systems)} />
+    </Fragment>
+  )
+};
 
 export default NewEden;

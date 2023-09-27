@@ -10,8 +10,8 @@ const Constellation = ({ id }) => {
   const solarSystems = constellation.systems.map(key => systems[key]);
 
   return (
-    <group name={constellation.name}>
-      <Stars solarSystems={solarSystems} />      
+    <group key={constellation.name}>
+      <Stars solarSystems={solarSystems} />
     </group>
   );
 }

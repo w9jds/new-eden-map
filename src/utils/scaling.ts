@@ -1,5 +1,5 @@
-import * as THREE from 'three'
-import { useThree } from 'react-three-fiber'
+import * as THREE from 'three';
+import { useThree } from '@react-three/fiber';
 
 const minValueBound = 10_000
 const maxValueBound = 20_000_000_000

@@ -14,7 +14,7 @@ const FRAGMENT_SHADER = `
 
 const uniforms = {
   color: { value: new THREE.Color('#ffffff') },
-  opacity: { value: 0.05 }
+  opacity: { value: 0.08 }
 }
 
 const Segments = forwardRef((props, ref) => (

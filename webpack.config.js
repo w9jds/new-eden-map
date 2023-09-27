@@ -18,7 +18,7 @@ module.exports = {
       {
         test: /\.tsx?$/,
         use: ['ts-loader'],
-        exclude: /node_modules/, 
+        exclude: /node_modules/,
       },
       {
         test: /\.(sa|sc|c)ss$/,
@@ -39,7 +39,8 @@ module.exports = {
     ]
   },
   devServer: {
-    contentBase: path.join(__dirname, 'dist'),
+    static: path.join(__dirname, '../../dist'),
+    historyApiFallback: true,
     port: 5000,
   },
   plugins: [

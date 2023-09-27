@@ -1,56 +1,39 @@
-import { constellations } from 'constants/constellations';
-import { systems } from 'constants/systems';
+import React, { FC, useMemo, useRef } from 'react';
+import { LineSegments, EdgesGeometry, LineBasicMaterial } from 'three';
+import { useThree } from '@react-three/fiber';
 
-import React, { useMemo, useEffect } from 'react';
-
-import { Region, System } from 'models/universe';
-import Stars from './Stars';
-import Connections from './Connections';
+import { Region } from 'models/universe';
+import Constellation from './Constellation';
 
 type Props = {
   data: Region;
 }
 
-const Region = ({ data }: Props) => {
-  
-  const solarSystems: Record<number, System> = useMemo(() => {
-    const info = {};
+const Region: FC<Props> = ({ data }) => {
+  const { scene } = useThree();
+  const regionRef = useRef<any>();
 
-    for (let id of data.constellations) {
-      const constellation = constellations[id];
-      
-      for (let systemId of constellation.systems) {
-        info[systemId] = systems[systemId];
-      }
-    }
+  const constellations = useMemo(
+    () => data.constellations.map(id => <Constellation id={id} />),
+    [data]
+  );
 
-    return info;
-  }, [data]);
+  const onMouseEnter = () => {
+    const outline = new LineSegments(
+      new EdgesGeometry(regionRef.current.geometry),
+      new LineBasicMaterial({color: 0x00000})
+    );
 
-  const connections = useMemo(() => {
-    const segments = {};
+    scene.add(outline);
+  }
 
-    for (let system of Object.values(solarSystems)) {
-      if (system.connections) {
-        for (let destination of system.connections) {
-          if (!segments[destination] || segments[destination].indexOf(system.id) == -1) {
-            if (!segments[system.id]) {
-              segments[system.id] = [destination];
-            } else {
-              segments[system.id].push(destination);
-            }
-          }
-        }
-      }
-    }
-    
-    return segments;
-  }, [solarSystems]);
+  const onMouseLeave = () => {
+    // scene.remove(outline);
+  }
 
   return (
-    <group name={data.name}>
-      <Connections connections={connections} />
-      <Stars solarSystems={Object.values(solarSystems)} />
+    <group key={data.name} ref={regionRef} onPointerEnter={onMouseEnter} onPointerLeave={onMouseLeave}>
+      {constellations}
     </group>
   );
 };

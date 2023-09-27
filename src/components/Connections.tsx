@@ -1,7 +1,7 @@
 import { systems } from 'constants/systems';
 
 import React, { useRef } from 'react'
-import { useFrame } from 'react-three-fiber'
+import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 
 import { buildAttributes, setAttributes, positionToArray } from 'utils/geometry'

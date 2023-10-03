@@ -1,7 +1,5 @@
 import React, { forwardRef } from 'react';
-
-import * as THREE from 'three';
-
+import { Color, AdditiveBlending } from 'three';
 
 const FRAGMENT_SHADER = `
   uniform vec3 color;
@@ -13,17 +11,17 @@ const FRAGMENT_SHADER = `
 `
 
 const uniforms = {
-  color: { value: new THREE.Color('#ffffff') },
-  opacity: { value: 0.08 }
+  color: { value: new Color('#ffffff') },
+  opacity: { value: 0.1 }
 }
 
-const Segments = forwardRef((props, ref) => (
+const Segments = forwardRef<any>((props, ref) => (
   <lineSegments ref={ref} {...props}>
-    <bufferGeometry />
+
     <shaderMaterial
       uniforms={uniforms}
       fragmentShader={FRAGMENT_SHADER}
-      blending={THREE.AdditiveBlending}
+      blending={AdditiveBlending}
       depthTest={false}
       transparent={true}
     />

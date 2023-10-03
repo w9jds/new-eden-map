@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { Canvas, useThree } from '@react-three/fiber';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 import NewEden from './NewEden';
+import SystemOverlay from 'controls/SystemOverlay';
 
 import './Application.scss';
 
@@ -22,10 +23,14 @@ const Camera = () => {
 const Application = () => {
 
   return (
-    <Canvas>
-      <Camera />
-      <NewEden />
-    </Canvas>
+    <Fragment>
+      <Canvas>
+        <Camera />
+        <NewEden />
+      </Canvas>
+
+      <SystemOverlay />
+    </Fragment>
   );
 }
 

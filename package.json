@@ -10,6 +10,8 @@
   "author": "Jeremy Shore",
   "license": "ISC",
   "devDependencies": {
+    "@types/redux-actions": "^2.6.3",
+    "@types/three": "^0.156.0",
     "css-loader": "^6.8.1",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.5.3",
@@ -29,6 +31,9 @@
     "webpack-dev-server": "^4.15.1"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/material": "^5.14.11",
     "@react-three/fiber": "^8.14.4",
     "classnames": "^2.3.2",
     "firebase": "^10.4.0",
@@ -39,6 +44,7 @@
     "redux-actions": "^3.0.0",
     "redux-saga": "^1.2.3",
     "reselect": "^4.1.8",
-    "three": "^0.157.0"
+    "three": "^0.157.0",
+    "three-stdlib": "^2.26.11"
   }
 }

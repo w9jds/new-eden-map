@@ -2,7 +2,7 @@ import { systems } from 'constants/systems';
 
 import React, { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
-import * as THREE from 'three'
+import { MathUtils, Color, Float32BufferAttribute } from 'three'
 
 import { buildAttributes, setAttributes, positionToArray } from 'utils/geometry'
 import { System } from 'models/universe'
@@ -17,15 +17,15 @@ type Props = {
 }
 
 const getColors = (clockTime, solarSystem, index) : THREE.Color => {
-  const colorMaxSec = new THREE.Color('#39b4f1')
+  const colorMaxSec = new Color('#39b4f1')
 
-  const twikleScale = THREE.MathUtils.clamp(
+  const twikleScale = MathUtils.clamp(
     -1 + Math.sin((clockTime.current + index) * twinkleSpeed) * 2,
     0,
     1
   );
 
-  return new THREE.Color('#a1a1a1').lerp(
+  return new Color('#a1a1a1').lerp(
     colorMaxSec, solarSystem.security
   );
 }
@@ -69,8 +69,8 @@ const Connections = ({ connections }: Props) => {
       }
     }
 
-    segmentsRef.current.geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-    segmentsRef.current.geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+    segmentsRef.current.geometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
+    segmentsRef.current.geometry.setAttribute('color', new Float32BufferAttribute(colors, 3));
 
     segmentsRef.current.geometry.attributes.position.needsUpdate = true;
   })

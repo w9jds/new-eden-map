@@ -3,6 +3,7 @@ import React, { Fragment, useMemo } from 'react';
 import { systems } from 'constants/systems';
 
 import Stars from './Stars';
+import Activity from './Activity';
 import Connections from './Connections';
 
 const NewEden = () => {

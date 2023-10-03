@@ -1,6 +1,7 @@
-import React, { forwardRef } from 'react'
-import * as THREE from 'three'
-import glow from 'textures/glow.png'
+import React, { forwardRef } from 'react';
+import { Color, TextureLoader } from 'three';
+import { ThreeEvent } from '@react-three/fiber';
+import glow from 'textures/glow.png';
 
 const VERTEX_SHADER = `
   attribute float size;
@@ -26,22 +27,21 @@ const FRAGMENT_SHADER = `
   }
 `
 
-const flareTexture = new THREE.TextureLoader().load(glow)
+const flareTexture = new TextureLoader().load(glow)
 
 const uniforms = {
-  color: { value: new THREE.Color() },
+  color: { value: new Color() },
   pointTexture: { value: flareTexture }
 }
 
-const Points = forwardRef((props, ref) => (
-  <points ref={ref} {...props} >
-    <bufferGeometry />
+const Points = forwardRef<any>((props, ref) => (
+  <points ref={ref} {...props}>
     <shaderMaterial
       uniforms={uniforms}
       vertexShader={VERTEX_SHADER}
       fragmentShader={FRAGMENT_SHADER}
     />
   </points>
-))
+));
 
-export default Points
+export default Points;

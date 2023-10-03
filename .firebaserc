@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "new-eden-storage-a5c23"
+  },
+  "targets": {
+    "new-eden-storage-a5c23": {
+      "hosting": {
+        "map": [
+          "new-eden-map"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

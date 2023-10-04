@@ -17,6 +17,7 @@ import SystemOverlay from 'controls/Overlays/System';
 import SearchOverlay from 'controls/Overlays/Search';
 
 import './Application.scss';
+import Effects from './Effects';
 
 const Camera = () => {
   const { camera, gl } = useThree();
@@ -72,6 +73,8 @@ const Application = () => {
       <Canvas>
         <Camera />
         <NewEden systems={systems} />
+
+        <Effects />
       </Canvas>
 
       <SystemOverlay />

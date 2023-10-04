@@ -1,7 +1,7 @@
-import React, { useRef } from 'react'
+import React, { FC, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux';
 import { useFrame } from '@react-three/fiber'
-import { MathUtils, Color, Float32BufferAttribute, BufferGeometry } from 'three'
+import { MathUtils, Color, Float32BufferAttribute, BufferGeometry, Line3 } from 'three'
 
 import { systemDetails } from 'constants/systems';
 import { getCurrentSystem } from 'store/current/selectors';
@@ -28,6 +28,11 @@ const getColors = (clockTime, solarSystem, index) : THREE.Color => {
   return new Color('#a1a1a1').lerp(
     colorMaxSec, solarSystem.security
   );
+}
+
+type StargateProps = {
+  originId: number;
+  neighbors: number[];
 }
 
 const Connections = ({ connections }: Props) => {
@@ -76,8 +81,6 @@ const Connections = ({ connections }: Props) => {
         segmentsRef.current
       }
     }
-
-
 
     geometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
     geometry.setAttribute('color', new Float32BufferAttribute(colors, 3));

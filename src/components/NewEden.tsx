@@ -1,8 +1,8 @@
 import React, { FC, Fragment, useMemo } from 'react';
 
-import Stars from './Stars';
 import Connections from './Connections';
 import { System } from 'models/universe';
+import Star from './Star';
 
 type Props = {
   systems: System[];
@@ -33,7 +33,7 @@ const NewEden: FC<Props> = ({ systems }) => {
   return (
     <Fragment>
       <Connections connections={connections} />
-      <Stars systems={systems} />
+      { systems.map(system => <Star key={system.solarSystemID} system={system} />) }
     </Fragment>
   )
 };

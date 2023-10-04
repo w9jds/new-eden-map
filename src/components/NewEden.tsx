@@ -1,24 +1,26 @@
-import React, { Fragment, useMemo } from 'react';
-
-import { systems } from 'constants/systems';
+import React, { FC, Fragment, useMemo } from 'react';
 
 import Stars from './Stars';
-import Activity from './Activity';
 import Connections from './Connections';
+import { System } from 'models/universe';
 
-const NewEden = () => {
+type Props = {
+  systems: System[];
+}
+
+const NewEden: FC<Props> = ({ systems }) => {
 
   const connections = useMemo(() => {
     const segments = {};
 
-    for (let system of Object.values(systems)) {
-      if (system.connections) {
-        for (let destination of system.connections) {
-          if (!segments[destination] || segments[destination].indexOf(system.id) == -1) {
-            if (!segments[system.id]) {
-              segments[system.id] = [destination];
+    for (let system of systems) {
+      if (system.neighbors) {
+        for (let destination of system.neighbors) {
+          if (!segments[destination] || segments[destination].indexOf(system.solarSystemID) == -1) {
+            if (!segments[system.solarSystemID]) {
+              segments[system.solarSystemID] = [destination];
             } else {
-              segments[system.id].push(destination);
+              segments[system.solarSystemID].push(destination);
             }
           }
         }
@@ -26,12 +28,12 @@ const NewEden = () => {
     }
 
     return segments;
-  }, []);
+  }, [systems]);
 
   return (
     <Fragment>
       <Connections connections={connections} />
-      <Stars solarSystems={Object.values(systems)} />
+      <Stars systems={systems} />
     </Fragment>
   )
 };

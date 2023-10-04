@@ -7,6 +7,7 @@ const FRAGMENT_SHADER = `
 
   void main() {
     gl_FragColor = vec4(color, opacity);
+
   }
 `
 
@@ -17,14 +18,17 @@ const uniforms = {
 
 const Segments = forwardRef<any>((props, ref) => (
   <lineSegments ref={ref} {...props}>
-
-    <shaderMaterial
+    <lineBasicMaterial
+      opacity={0.1}
+      transparent={true}
+    />
+    {/* <shaderMaterial
       uniforms={uniforms}
       fragmentShader={FRAGMENT_SHADER}
       blending={AdditiveBlending}
       depthTest={false}
       transparent={true}
-    />
+    /> */}
   </lineSegments>
 ));
 

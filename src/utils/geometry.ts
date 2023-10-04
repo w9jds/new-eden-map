@@ -1,10 +1,10 @@
+import { System } from 'models/universe';
 import { Vector3, BufferAttribute } from 'three';
 
 export const buildAttributes = (count: number) => ({
   positions: new Float32Array(count * 3),
   colors: new Float32Array(count * 3),
   scales: new Float32Array(count),
-  systemId: new Float32Array(count),
 })
 
 export const setAttributes = (geometry: THREE.BufferGeometry, positions: Float32Array, colors: Float32Array, scales: Float32Array) => {
@@ -19,16 +19,11 @@ export const setAttributes = (geometry: THREE.BufferGeometry, positions: Float32
   geometry.computeBoundingSphere();
 }
 
-export interface HasPosition {
- x: number;
- z: number;
- y: number;
-}
-
 const tempVector = new Vector3()
-export const positionToArray = ({ x, y, z }: HasPosition, target: Float32Array, index: number, zOffset: number = 0): void => {
-  tempVector.x = z / 1000000000000000;
-  tempVector.y = y / 1000000000000000;
-  tempVector.z = x / 1000000000000000;
+export const positionToArray = (details: System, target: Float32Array, index: number): void => {
+  tempVector.x = +details.position[0] / 1000000000000000;
+  tempVector.y = +details.position[1] / 1000000000000000;
+  tempVector.z = +details.position[2] / 1000000000000000;
+
   tempVector.toArray(target, index * 3);
 }

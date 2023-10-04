@@ -1,0 +1,30 @@
+
+
+.result {
+  display: flex;
+  min-height: 52px;
+
+  .names {
+    margin: auto 0 auto 24px;
+    flex: 1;
+
+    h6 {
+      opacity: 0.8;
+    }
+  }
+
+  .security {
+    margin: auto 18px auto 0;
+  }
+
+  &:hover {
+    cursor: pointer;
+    background-color: #ffffff0d;
+  }
+
+  &:not(:last-of-type) {
+    border-bottom: #ffffff0d 1px solid;
+
+  }
+
+}

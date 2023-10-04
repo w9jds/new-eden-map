@@ -1,11 +1,11 @@
-import { systems } from 'constants/systems';
-
 import React, { useRef } from 'react'
+import { useSelector } from 'react-redux';
 import { useFrame } from '@react-three/fiber'
-import { MathUtils, Color, Float32BufferAttribute } from 'three'
+import { MathUtils, Color, Float32BufferAttribute, BufferGeometry } from 'three'
 
-import { buildAttributes, setAttributes, positionToArray } from 'utils/geometry'
-import { System } from 'models/universe'
+import { systemDetails } from 'constants/systems';
+import { getCurrentSystem } from 'store/current/selectors';
+import { positionToArray } from 'utils/geometry'
 
 import Segments from './Segments'
 
@@ -31,11 +31,12 @@ const getColors = (clockTime, solarSystem, index) : THREE.Color => {
 }
 
 const Connections = ({ connections }: Props) => {
-
+  const current = useSelector(getCurrentSystem);
   const segmentsRef = useRef(null)
   const clockTime = useRef(0)
 
   useFrame((_, delta) => {
+    const geometry = segmentsRef.current.geometry as BufferGeometry;
     clockTime.current = (clockTime.current + delta) % clockWarparound;
 
     if (!segmentsRef.current) {
@@ -44,33 +45,43 @@ const Connections = ({ connections }: Props) => {
 
     const count = Object.values(connections).reduce((out, current) => out += current.length * 2, 0);
 
-    const { positions, colors } = {
+    const { positions, colors, size } = {
       positions: new Float32Array(count * 3),
       colors: new Float32Array(count * 3),
+      size: new Float32Array(count),
     };
 
     let index = 0;
 
     for (let systemId in connections) {
-      const from = systems[systemId];
+      const from = systemDetails[systemId];
 
-      for (let desinationId of connections[systemId]) {
-        const to = systems[desinationId];
+      for (let destinationId of connections[systemId]) {
+        const to = systemDetails[destinationId];
 
         positionToArray(from, positions, index);
-        // getColors(clockTime, from, index).toArray(colors, index * 3);
+        getColors(clockTime, from, index).toArray(colors, index * 3);
         index++;
 
         positionToArray(to, positions, index);
-        // getColors(clockTime, to, index).toArray(colors, index * 3);
+        getColors(clockTime, to, index).toArray(colors, index * 3);
         index++;
+
+        if (destinationId == current?.solarSystemID || +systemId == current?.solarSystemID) {
+          size[index] = 3;
+        } else {
+          size[index] = 1;
+        }
 
         segmentsRef.current
       }
     }
 
-    segmentsRef.current.geometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
-    segmentsRef.current.geometry.setAttribute('color', new Float32BufferAttribute(colors, 3));
+
+
+    geometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
+    geometry.setAttribute('color', new Float32BufferAttribute(colors, 3));
+    geometry.setAttribute('lineSize', new Float32BufferAttribute(size, 1));
 
     segmentsRef.current.geometry.attributes.position.needsUpdate = true;
   })

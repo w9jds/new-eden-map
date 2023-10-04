@@ -2,33 +2,34 @@ import React, { FC, useRef, useMemo } from 'react'
 import { Color, MathUtils, BufferGeometry, BufferAttribute } from 'three'
 import { useFrame } from '@react-three/fiber'
 
+import { systemIds } from 'constants/systems'
 import { buildAttributes, setAttributes, positionToArray } from 'utils/geometry'
 import { System } from 'models/universe'
 
-import Points from './Points'
-import { useDispatch } from 'react-redux'
-import { setCurrentSystem } from 'store/current/actions'
+import Star from './Star';
+import { useSelector } from 'react-redux'
+import { getCurrentSystem } from 'store/current/selectors'
 
 const clockWarparound = 60 * 60 * 1000
 const twinkleSpeed = 0.85
 
 type Props = {
-  solarSystems: System[];
+  systems: System[];
 }
 
-const Stars: FC<Props> = ({ solarSystems }) => {
-  const colorMaxSec = new Color('#39b4f1');
-  const dispatch = useDispatch();
+const colorMaxSec = new Color('#39b4f1');
+const Stars: FC<Props> = ({ systems }) => {
+  const current = useSelector(getCurrentSystem);
   const pointsRef = useRef(null);
   const clockTime = useRef(0);
 
   const attributes = useMemo(() => ({
-    count: solarSystems.length,
-    ...buildAttributes(solarSystems.length),
-  }), [solarSystems]);
+    count: systems.length,
+    ...buildAttributes(systems.length),
+  }), [systems]);
 
   useFrame((state, delta) => {
-    const { count, positions, colors, scales, systemId } = attributes;
+    const { count, positions, colors, scales } = attributes;
     clockTime.current = (clockTime.current + delta) % clockWarparound;
 
     if (!pointsRef.current) {
@@ -36,7 +37,7 @@ const Stars: FC<Props> = ({ solarSystems }) => {
     }
 
     for (let index = 0; index < count; index++) {
-      const solarSystem = solarSystems[index];
+      const solarSystem = systems[index];
 
       positionToArray(solarSystem, positions, index);
 
@@ -45,32 +46,38 @@ const Stars: FC<Props> = ({ solarSystems }) => {
       );
 
       new Color('#a1a1a1').lerp(
-        colorMaxSec, solarSystem.security
+        colorMaxSec,
+        solarSystem.security
       ).addScalar(
         twikleScale
       ).toArray(colors, index * 3)
 
-      scales[index] = 2.0 * (solarSystem.radius / 1000000000000);
-      systemId[index] = solarSystem.id;
+      if (current?.solarSystemID === solarSystem.solarSystemID) {
+        scales[index] = 6.0 * (solarSystem.radius / 1000000000000);
+      } else {
+        scales[index] = 2.0 * (solarSystem.radius / 1000000000000);
+      }
     }
 
-    setAttributes(pointsRef.current.geometry as BufferGeometry, positions, colors, scales);
-    pointsRef.current.geometry.setAttribute('systemIds', new BufferAttribute(systemId, 1));
+    const geometry = pointsRef.current.geometry as BufferGeometry;
+    geometry.setAttribute('position', new BufferAttribute(positions, 3));
+    geometry.setAttribute('color', new BufferAttribute(colors, 3));
+    geometry.setAttribute('size', new BufferAttribute(scales, 1));
+    // geometry.setAttribute('radius', new BufferAttribute(scales, 1));
 
-    state.raycaster.setFromCamera(state.mouse, state.camera);
-    const intersect = state.raycaster.intersectObject(pointsRef.current);
+    geometry.attributes.position.needsUpdate = true;
+    geometry.attributes.color.needsUpdate = true;
+    geometry.attributes.size.needsUpdate = true;
+    // geometry.attributes.radius.needsUpdate = true;
 
-    if (intersect.length > 0) {
-      const object = intersect[0];
-      const system = solarSystems[object.index];
-      dispatch(setCurrentSystem(system));
-    } else {
-      dispatch(setCurrentSystem(null));
-    }
+    geometry.computeBoundingSphere();
+
+    // setAttributes(, positions, colors, scales);
+
   });
 
   return (
-    <Points ref={pointsRef} />
+    <Star ref={pointsRef} />
   );
 }
 

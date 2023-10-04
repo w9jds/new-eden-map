@@ -59,21 +59,7 @@ const Stars: FC<Props> = ({ systems }) => {
       }
     }
 
-    const geometry = pointsRef.current.geometry as BufferGeometry;
-    geometry.setAttribute('position', new BufferAttribute(positions, 3));
-    geometry.setAttribute('color', new BufferAttribute(colors, 3));
-    geometry.setAttribute('size', new BufferAttribute(scales, 1));
-    // geometry.setAttribute('radius', new BufferAttribute(scales, 1));
-
-    geometry.attributes.position.needsUpdate = true;
-    geometry.attributes.color.needsUpdate = true;
-    geometry.attributes.size.needsUpdate = true;
-    // geometry.attributes.radius.needsUpdate = true;
-
-    geometry.computeBoundingSphere();
-
-    // setAttributes(, positions, colors, scales);
-
+    setAttributes(pointsRef.current.geometry as BufferGeometry, positions, colors, scales);
   });
 
   return (

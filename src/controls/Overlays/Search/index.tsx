@@ -3,7 +3,7 @@ import classnames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Button, Divider, Paper } from '@mui/material';
-import { Directions } from '@mui/icons-material';
+import { Close } from '@mui/icons-material';
 import SearchResult from './Result';
 
 import { System } from 'models/universe';
@@ -16,9 +16,9 @@ import './index.scss';
 const SearchOverlay = () => {
   const current = useSelector(getCurrentSystem);
   const dispatch = useDispatch();
+  const [value, setValue] = useState('');
   const [isOpen, setOpen] = useState(false);
   const [options, setOptions] = useState<number[]>([]);
-  const [value, setValue] = useState('');
 
   useEffect(() => {
     if (value !== current?.name) {
@@ -40,6 +40,11 @@ const SearchOverlay = () => {
     'collapsed': !isOpen,
     'expanded': isOpen
   }), [isOpen]);
+
+  const onClear = () => {
+    dispatch(setCurrentSystem(null));
+    setValue('');
+  }
 
   const onSearchChange = (e) => {
     setValue(e.target.value);
@@ -65,9 +70,13 @@ const SearchOverlay = () => {
           value={value}
           onChange={onSearchChange}/>
 
-        <Button variant="text">
-          <Directions />
-        </Button>
+        {
+          current && (
+            <Button variant="text" onClick={onClear}>
+              <Close />
+            </Button>
+          )
+        }
       </div>
 
       {

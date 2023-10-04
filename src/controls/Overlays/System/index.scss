@@ -1,0 +1,60 @@
+.system-overlay {
+  border-radius: 0 0 24px 24px !important;
+
+  position: absolute;
+  background-color: #222 !important;
+  height: 400px;
+  width: 400px;
+  top: 0px;
+
+  .header {
+    height: 170px;
+    background-position: center;
+  }
+
+  .details {
+    display: flex;
+    flex-direction: row;
+    padding: 16px 24px;
+
+    .names {
+      flex: 1;
+
+      .regions {
+        opacity: 0.8;
+      }
+    }
+
+    .security {
+      margin: auto;
+    }
+  }
+
+  .actions {
+    display: flex;
+    padding: 12px 0;
+    flex-direction: row;
+    justify-content: space-evenly;
+
+    button {
+      &:not(:first-of-type) {
+        background-color: transparent;
+        border: white 1px solid;
+        color: white;
+      }
+
+      &.zkill {
+        svg {
+          margin-top: 2px;
+        }
+      }
+
+      svg {
+        height: 20px;
+        width: 20px;
+      }
+    }
+
+  }
+
+}

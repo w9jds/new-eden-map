@@ -49,13 +49,12 @@ const Points = forwardRef<any>(({ ...props }, ref) => {
 
   return (
     <points ref={ref} {...props} onClick={onClick} >
-      <pointsMaterial  />
 
-      {/* <shaderMaterial
+      <shaderMaterial
         uniforms={uniforms}
         vertexShader={VERTEX_SHADER}
         fragmentShader={FRAGMENT_SHADER}
-      /> */}
+      />
     </points>
   );
 });

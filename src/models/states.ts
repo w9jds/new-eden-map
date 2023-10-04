@@ -1,3 +1,4 @@
+import { FirebaseApp } from 'firebase/app';
 import { System } from './universe';
 
 export type ApplicationState = {
@@ -5,5 +6,7 @@ export type ApplicationState = {
 };
 
 export type CurrentState = {
+  readonly firebase: FirebaseApp;
+
   system: System;
 }

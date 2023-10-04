@@ -29,6 +29,24 @@ module.exports = {
         ],
       },
       {
+        test: /\.svg$/,
+        exclude: [/node_modules/],
+        loader: '@svgr/webpack',
+        options: {
+          svgo: false,
+        }
+      },
+      {
+        test: /\.svg$/,
+        include: [/node_modules/],
+        exclude: [/src/],
+        loader: 'file-loader',
+        options: {
+          name: '[name].[ext]',
+          outputPath: 'assets/'
+        }
+      },
+      {
         test: /\.(png|jpg|gif)$/,
         loader: 'file-loader',
         options: {
@@ -44,6 +62,13 @@ module.exports = {
     port: 5000,
   },
   plugins: [
+    new webpack.DefinePlugin({
+      'process.env.FIREBASE_APP_ID': JSON.stringify(process.env.NEW_EDEN_APP_ID),
+      'process.env.FIREBASE_MEASUREMENT_ID': JSON.stringify(process.env.NEW_EDEN_MEASUREMENT_ID),
+    }),
+    new webpack.EnvironmentPlugin([
+      'NEW_EDEN_API_KEY',
+    ]),
     new MiniCssExtractPlugin({
       filename: '[name].[hash].css',
       chunkFilename: '[id].css',

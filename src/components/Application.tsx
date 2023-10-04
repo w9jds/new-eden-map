@@ -1,18 +1,22 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { initializeApp } from 'firebase/app';
+
+import gsap from 'gsap';
+import { Vector3 } from 'three';
 import { Canvas, useThree } from '@react-three/fiber';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
-import NewEden from './NewEden';
+import { FirebaseConfig } from 'config';
 import { systems } from 'constants/systems';
 import { getCurrentSystem } from 'store/current/selectors';
+import { setFirebaseApp } from 'store/current/actions';
 
-import SystemOverlay from 'controls/SystemOverlay';
-import SearchOverlay from 'controls/SearchOverlay';
+import NewEden from './NewEden';
+import SystemOverlay from 'controls/Overlays/System';
+import SearchOverlay from 'controls/Overlays/Search';
 
 import './Application.scss';
-import { Quaternion, Vector3 } from 'three';
-import gsap from 'gsap';
 
 const Camera = () => {
   const { camera, gl } = useThree();
@@ -56,6 +60,12 @@ const Camera = () => {
 }
 
 const Application = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const firebaseApp = initializeApp(FirebaseConfig);
+    dispatch(setFirebaseApp(firebaseApp));
+  }, []);
 
   return (
     <Fragment>
@@ -64,8 +74,8 @@ const Application = () => {
         <NewEden systems={systems} />
       </Canvas>
 
-      <SearchOverlay />
       <SystemOverlay />
+      <SearchOverlay />
     </Fragment>
   );
 }

@@ -4,7 +4,6 @@ import { initializeApp } from 'firebase/app';
 
 import gsap from 'gsap';
 import { Vector3 } from 'three';
-import { Html } from '@react-three/drei';
 import { Canvas, useThree } from '@react-three/fiber';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
@@ -74,9 +73,10 @@ const Application = () => {
 
   return (
     <Fragment>
-      <Canvas>
+      <Canvas gl={{ antialias: true, logarithmicDepthBuffer: true }}>
         <Camera />
         <NewEden systems={systems} />
+        <Effects />
       </Canvas>
 
       <SystemOverlay />

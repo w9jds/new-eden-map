@@ -19,7 +19,7 @@ const uniforms = {
 const Segments = forwardRef<any>((props, ref) => (
   <lineSegments ref={ref} {...props}>
     <lineBasicMaterial
-      opacity={0.1}
+      opacity={0.2}
       transparent={true}
     />
     {/* <shaderMaterial

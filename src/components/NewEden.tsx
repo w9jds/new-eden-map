@@ -1,4 +1,5 @@
 import React, { FC, Fragment, useMemo } from 'react';
+import { Bloom } from '@react-three/postprocessing';
 
 import Connections from './Connections';
 import { System } from 'models/universe';

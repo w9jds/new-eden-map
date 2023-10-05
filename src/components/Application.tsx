@@ -4,7 +4,7 @@ import { initializeApp } from 'firebase/app';
 
 import gsap from 'gsap';
 import { Vector3 } from 'three';
-import { Canvas, useThree } from '@react-three/fiber';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 import { FirebaseConfig } from 'config';
@@ -27,8 +27,8 @@ const Camera = () => {
   const current = useSelector(getCurrentSystem);
 
   useEffect(() => {
-    camera.position.set(24.50844220337405, 541.4000031539805, -320.26971689413546);
-    camera.rotation.set(-1.8549337081268555, 0.012245453223284115, 3.099687390298583);
+    camera.position.set(187.41718439748556, 492.2187090727254, -250.123415836688);
+    camera.rotation.set(-1.9050773839836128, 0.445220982640734, 2.249474219409512);
 
     setControls(new OrbitControls(camera, gl.domElement));
   }, []);
@@ -59,6 +59,10 @@ const Camera = () => {
     }
   }, [current]);
 
+  useFrame(() => {
+
+  })
+
   return null;
 }
 
@@ -73,7 +77,7 @@ const Application = () => {
 
   return (
     <Fragment>
-      <Canvas gl={{ antialias: true, logarithmicDepthBuffer: true }}>
+      <Canvas gl={{ antialias: true, pixelRatio: window.devicePixelRatio, logarithmicDepthBuffer: true }}>
         <Camera />
         <NewEden systems={systems} />
         <Effects />

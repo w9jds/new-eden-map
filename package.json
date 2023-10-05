@@ -34,8 +34,9 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@mui/icons-material": "^5.14.11",
-    "@mui/material": "^5.14.11",
+    "@mui/icons-material": "^5.14.12",
+    "@mui/material": "^5.14.12",
+    "@react-three/drei": "^9.86.3",
     "@react-three/fiber": "^8.14.4",
     "@react-three/postprocessing": "^2.15.1",
     "classnames": "^2.3.2",

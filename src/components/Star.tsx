@@ -1,12 +1,13 @@
 import React, { FC, useRef, useMemo } from 'react';
-import { BufferAttribute, BufferGeometry, Color, MathUtils, Mesh, TextureLoader, Vector3 } from 'three';
-import { useSelector } from 'react-redux';
-
-import { System } from 'models/universe';
+import { BufferAttribute, BufferGeometry, Color, MathUtils, TextureLoader, Vector3 } from 'three';
+import { useDispatch, useSelector } from 'react-redux';
+import { useFrame } from '@react-three/fiber';
+import { Select } from '@react-three/postprocessing';
 
 import glow from 'textures/glow.png';
+import { System } from 'models/universe';
 import { getCurrentSystem } from 'store/current/selectors';
-import { useFrame } from '@react-three/fiber';
+import { setCurrentSystem } from 'store/current/actions';
 
 const VERTEX_SHADER = `
   attribute float size;
@@ -44,11 +45,12 @@ type Props = {
 }
 
 const SolarSystem: FC<Props> = ({ system, ...props }) => {
+  const dispatch = useDispatch();
   const target = useSelector(getCurrentSystem);
   const meshRef = useRef<any>();
 
   const { position, radius } = useMemo(() => ({
-    radius: MathUtils.clamp(system.radius / 1999900000000, 1, 5),
+    radius: MathUtils.clamp(system.radius / 3500000000000, 0.7, 5),
     position: new Vector3(
       +system.position[0] / 1000000000000000,
       +system.position[1] / 1000000000000000,
@@ -56,13 +58,20 @@ const SolarSystem: FC<Props> = ({ system, ...props }) => {
     ),
   }), [system]);
 
+  const focused = useMemo(() =>
+    target?.solarSystemID === system.solarSystemID,
+    [target]
+  );
+
+  const onSelect = () => {
+    dispatch(setCurrentSystem(system));
+  }
+
   useFrame((state) => {
     const color = new Float32Array(3);
     const geometry = meshRef.current.geometry as BufferGeometry;
 
     if (target?.solarSystemID === system.solarSystemID) {
-
-
       new Color('#a1a1a1')
         .lerp(new Color('#39b4f1'), system.security)
         .toArray(color);
@@ -72,10 +81,12 @@ const SolarSystem: FC<Props> = ({ system, ...props }) => {
   });
 
   return (
-    <mesh ref={meshRef} position={position} {...props} >
-      <sphereGeometry args={[radius, 15, 15]} />
-      <meshNormalMaterial/>
-    </mesh>
+    <Select enabled={focused}>
+      <mesh ref={meshRef} position={position} onClick={onSelect} {...props} >
+        <sphereGeometry args={[radius, 15, 15]} />
+        <meshNormalMaterial/>
+      </mesh>
+    </Select>
   );
 }
 

@@ -11,6 +11,8 @@ import background from 'assets/overlay-header.jpg';
 import { getCurrentSystem } from 'store/current/selectors';
 
 import './index.scss';
+import SystemStatistics from './Statistics';
+import SystemNeighbors from './Neighbors';
 
 type Props = {};
 
@@ -46,7 +48,7 @@ const SystemOverlay: FC<Props> = () => {
       </div>
       <Divider />
       <div className="actions">
-        <Fab variant="circular" size="small" color="primary">
+        <Fab disabled variant="circular" size="small" color="primary">
           <Directions />
         </Fab>
         <Fab className="zkill" variant="circular" size="small" onClick={onZKillboard}>
@@ -56,9 +58,9 @@ const SystemOverlay: FC<Props> = () => {
           <Dotlan />
         </Fab>
       </div>
-      <Divider />
-      <div className="kill-feed">
-
+      <div className="information">
+        <SystemNeighbors />
+        <SystemStatistics />
       </div>
     </Paper>
   )

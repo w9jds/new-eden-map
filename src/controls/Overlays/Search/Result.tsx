@@ -5,11 +5,16 @@ import { getClassName } from 'utils/universe';
 import { System } from 'models/universe';
 
 type Props = {
+  mini?: boolean;
   systemId: number;
   onClick?: (details: System) => void;
 }
 
-const Result: FC<Props> = ({ systemId, onClick }) => {
+const Result: FC<Props> = ({
+  mini = false,
+  systemId,
+  onClick
+}) => {
   const system = useMemo(() => systemDetails[systemId], [systemId]);
 
   const onSelect = () => {
@@ -24,9 +29,13 @@ const Result: FC<Props> = ({ systemId, onClick }) => {
         <Typography variant="h5">
           {system.name}
         </Typography>
-        <Typography variant="subtitle1">
-          {system.regionName}
-        </Typography>
+        {
+          !mini && (
+            <Typography variant="subtitle1">
+              {system.regionName}
+            </Typography>
+          )
+        }
       </div>
       <div className="security">
         <Typography variant="h5">

@@ -32,3 +32,12 @@ export type Constellation = {
   z: number;
   systems: number[];
 }
+
+export type Statistics = {
+  jumps: number;
+  kills: {
+    npcKills: number;
+    podKills: number;
+    shipKills: number;
+  }
+}

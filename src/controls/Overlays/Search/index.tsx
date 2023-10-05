@@ -67,6 +67,7 @@ const SearchOverlay = () => {
     <Paper className={overlay}>
       <div className="search-bar">
         <input className="search"
+          placeholder="Search New Eden"
           value={value}
           onChange={onSearchChange}/>
 
@@ -84,7 +85,7 @@ const SearchOverlay = () => {
           <Fragment>
             <Divider />
             <div className="search-results">
-              {options.map(option => <SearchResult onClick={onResultClick} systemId={option} />)}
+              {options.map(option => <SearchResult key={option} onClick={onResultClick} systemId={option} />)}
             </div>
           </Fragment>
         )

@@ -1,0 +1,16 @@
+
+.navigation-overlay {
+  border-radius: 0 0 24px 24px !important;
+
+  position: absolute;
+  background-color: #222 !important;
+  height: 400px;
+  width: 400px;
+  top: 0px;
+
+  .route {
+    display: flex;
+    flex-direction: column;
+
+  }
+}

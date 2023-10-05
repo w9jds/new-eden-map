@@ -1,9 +1,10 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect, Suspense } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { initializeApp } from 'firebase/app';
 
 import gsap from 'gsap';
 import { Vector3 } from 'three';
+import { Html } from '@react-three/drei';
 import { Canvas, useThree } from '@react-three/fiber';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
@@ -13,11 +14,11 @@ import { getCurrentSystem } from 'store/current/selectors';
 import { setFirebaseApp } from 'store/current/actions';
 
 import NewEden from './NewEden';
+import Effects from './Effects';
 import SystemOverlay from 'controls/Overlays/System';
 import SearchOverlay from 'controls/Overlays/Search';
 
 import './Application.scss';
-import Effects from './Effects';
 
 const Camera = () => {
   const { camera, gl } = useThree();
@@ -72,8 +73,9 @@ const Application = () => {
     <Fragment>
       <Canvas>
         <Camera />
-        <NewEden systems={systems} />
-
+        <Suspense fallback={<Html center>Loading.</Html>}>
+          <NewEden systems={systems} />
+        </Suspense>
         <Effects />
       </Canvas>
 

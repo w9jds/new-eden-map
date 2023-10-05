@@ -7,11 +7,15 @@ import { ThemeProvider, createTheme } from '@mui/material';
 import Application from 'components/Application';
 import { ApplicationState } from 'models/states';
 
+import kills from 'store/kills/reducer';
 import current from 'store/current/reducer';
+import navigation from 'store/navigation/reducer';
 
 const store = createStore(
   combineReducers<ApplicationState>({
     current,
+    navigation,
+    kills,
   }),
   applyMiddleware()
 );

@@ -37,8 +37,7 @@ export type KillMail = {
   names: Record<number, NameRef>;
   solar_system_id: number;
   victim: Victim;
-}
 
-export type KillMailState = KillMail & {
-  wasNotified: boolean;
+  reported: Date;
+  seen: boolean;
 }

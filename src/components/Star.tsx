@@ -67,17 +67,8 @@ const SolarSystem: FC<Props> = ({ system, ...props }) => {
     dispatch(setCurrentSystem(system));
   }
 
-  useFrame((state) => {
-    const color = new Float32Array(3);
-    const geometry = meshRef.current.geometry as BufferGeometry;
+  useFrame(() => {
 
-    if (target?.solarSystemID === system.solarSystemID) {
-      new Color('#a1a1a1')
-        .lerp(new Color('#39b4f1'), system.security)
-        .toArray(color);
-
-      geometry.setAttribute('color', new BufferAttribute(color, 3));
-    }
   });
 
   return (

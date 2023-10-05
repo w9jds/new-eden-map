@@ -12,11 +12,13 @@ import { FirebaseConfig } from 'config';
 import { systems } from 'constants/systems';
 import { getCurrentSystem } from 'store/current/selectors';
 import { setFirebaseApp } from 'store/current/actions';
+import { registerKillFeed } from 'store/kills/actions';
 
 import NewEden from './NewEden';
 import Effects from './Effects';
 import SystemOverlay from 'controls/Overlays/System';
 import SearchOverlay from 'controls/Overlays/Search';
+import KillFeed from 'controls/Overlays/KillFeed';
 
 import './Application.scss';
 
@@ -67,20 +69,19 @@ const Application = () => {
   useEffect(() => {
     const firebaseApp = initializeApp(FirebaseConfig);
     dispatch(setFirebaseApp(firebaseApp));
+    dispatch(registerKillFeed());
   }, []);
 
   return (
     <Fragment>
       <Canvas>
         <Camera />
-        <Suspense fallback={<Html center>Loading.</Html>}>
-          <NewEden systems={systems} />
-        </Suspense>
-        <Effects />
+        <NewEden systems={systems} />
       </Canvas>
 
       <SystemOverlay />
       <SearchOverlay />
+      <KillFeed />
     </Fragment>
   );
 }

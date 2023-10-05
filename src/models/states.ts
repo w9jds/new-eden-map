@@ -23,5 +23,5 @@ export type NavigationState = {
 }
 
 export type KillState = {
-  readonly feed: KillMail[];
+  readonly feed: Record<number, KillMail>;
 }

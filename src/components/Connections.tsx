@@ -1,4 +1,4 @@
-import React, { FC, useMemo, useRef } from 'react'
+import React, { FC, useEffect, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux';
 import { useFrame } from '@react-three/fiber'
 import { MathUtils, Color, Float32BufferAttribute, BufferGeometry, Line3 } from 'three'
@@ -40,15 +40,9 @@ const Connections = ({ connections }: Props) => {
   const segmentsRef = useRef(null)
   const clockTime = useRef(0)
 
-  useFrame((_, delta) => {
-    const geometry = segmentsRef.current.geometry as BufferGeometry;
-    clockTime.current = (clockTime.current + delta) % clockWarparound;
-
-    if (!segmentsRef.current) {
-      return;
-    }
-
-    const count = Object.values(connections).reduce((out, current) => out += current.length * 2, 0);
+  useEffect(() => {
+    const count = Object.values(connections)
+      .reduce((out, current) => out += current.length * 2, 0);
 
     const { positions, colors, size } = {
       positions: new Float32Array(count * 3),
@@ -57,7 +51,6 @@ const Connections = ({ connections }: Props) => {
     };
 
     let index = 0;
-
     for (let systemId in connections) {
       const from = systemDetails[systemId];
 
@@ -77,16 +70,17 @@ const Connections = ({ connections }: Props) => {
         } else {
           size[index] = 1;
         }
-
-        segmentsRef.current
       }
     }
 
+    const geometry = segmentsRef.current.geometry as BufferGeometry;
     geometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
     geometry.setAttribute('color', new Float32BufferAttribute(colors, 3));
-    geometry.setAttribute('lineSize', new Float32BufferAttribute(size, 1));
+    geometry.setAttribute('lineSize', new Float32BufferAttribute(size, 1))
+  }, [connections])
 
-    segmentsRef.current.geometry.attributes.position.needsUpdate = true;
+  useFrame((state, delta) => {
+
   })
 
   return (

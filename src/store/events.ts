@@ -12,4 +12,7 @@ export enum NavigationEvents {
 
 export enum KillEvents {
   ADD_NEW_KILL = 'kill/addNewKill',
+  REMOVE_KILL = 'kill/removeKill',
+  REGISTER_KILL_FEED = 'kill/registerKillFeed',
+  FLAG_KILL_AS_SEEN = 'kill/flagKillAsSeen',
 }

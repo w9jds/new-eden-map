@@ -20,6 +20,10 @@
     .names {
       flex: 1;
 
+      h6:first-of-type {
+        font-weight: normal;
+      }
+
       .regions {
         opacity: 0.8;
       }

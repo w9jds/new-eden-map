@@ -3,7 +3,8 @@
 .system-neighbors {
   padding: 16px 0;
 
-  h4 {
+  h6 {
+    font-weight: normal;
     padding: 0 24px 8px 24px;
   }
 
@@ -15,6 +16,10 @@
 
     .names {
       flex: 1;
+
+      p {
+        font-weight: 300;
+      }
     }
 
     &:hover {

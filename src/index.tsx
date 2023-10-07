@@ -30,6 +30,9 @@ const theme = createTheme({
   palette: {
     mode: 'dark',
   },
+  typography: {
+    htmlFontSize: 10
+  }
 });
 
 middleware[0].run(sagas);

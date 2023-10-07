@@ -1,8 +1,9 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 
+import { KillMail } from 'models/killmail';
 import { getKillFeed } from 'store/kills/selectors';
-import KillMail from './KillMail';
+import Card from './Card';
 
 import './index.scss';
 
@@ -11,7 +12,7 @@ const KillFeed = () => {
 
   return (
     <div className="kill-feed">
-      { kills.map(mail => <KillMail key={mail.killmail_id} kill={mail} />) }
+      { kills.map(mail => <Card key={mail.killmail_id} data={mail} />) }
     </div>
   );
 }

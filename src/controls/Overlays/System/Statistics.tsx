@@ -26,15 +26,15 @@ const SystemStatistics = () => {
     <Fragment>
       <Divider />
       <div className='system-statistics'>
-        <Typography variant="h4">Hourly Activity</Typography>
+        <Typography variant="h6">Hourly Activity</Typography>
         <div>
           <div>
-            <Typography variant="h5"> {`${stats?.jumps || 0} Jumps`} </Typography>
-            <Typography variant="h5"> {`${stats?.kills?.shipKills || 0} Ship Kills`} </Typography>
+            <Typography variant="body2"> {`${stats?.jumps || 0} Jumps`} </Typography>
+            <Typography variant="body2"> {`${stats?.kills?.shipKills || 0} Ship Kills`} </Typography>
           </div>
           <div>
-            <Typography variant="h5"> {`${stats?.kills?.podKills || 0} Pod Kills`} </Typography>
-            <Typography variant="h5"> {`${stats?.kills?.npcKills || 0} NPC Kills`} </Typography>
+            <Typography variant="body2"> {`${stats?.kills?.podKills || 0} Pod Kills`} </Typography>
+            <Typography variant="body2"> {`${stats?.kills?.npcKills || 0} NPC Kills`} </Typography>
           </div>
         </div>
       </div>

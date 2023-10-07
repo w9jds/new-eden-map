@@ -24,3 +24,17 @@ export const systemDetails: Record<number, System> = systems.reduce(
 export const systemIds: number[] = systems.map(
   (system: System) => system.solarSystemID
 );
+
+export const regions = () => {
+  const out: Record<number, number[]> = {};
+
+  for (let system of systems) {
+    if (!out[system.regionID]) {
+      out[system.regionID] = [ system.solarSystemID ];
+    }
+
+    out[system.regionID].push(system.solarSystemID);
+  }
+
+  return out;
+}

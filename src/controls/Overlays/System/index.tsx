@@ -32,16 +32,16 @@ const SystemOverlay: FC<Props> = () => {
       <div className="header" style={{ backgroundImage: `url(${background})` }} />
       <div className="details">
         <div className="names">
-          <Typography variant='h4'>
+          <Typography variant='h6'>
             {system.name}
           </Typography>
-          <Typography variant='h6' className="regions">
+          <Typography variant='subtitle1' className="regions">
             {`${system.constellationName} - ${system.regionName}`}
           </Typography>
         </div>
 
         <div className="security">
-          <Typography variant='h5'>
+          <Typography variant='body1'>
             {system.security.toFixed(1)}
           </Typography>
         </div>

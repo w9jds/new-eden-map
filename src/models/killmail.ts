@@ -24,7 +24,7 @@ export type Victim = {
   ship_type_id: number;
 }
 
-type NameRef = {
+export type NameRef = {
   id: number;
   category: string;
   name: string;

@@ -1,9 +1,8 @@
 import React, { FC, Fragment, useMemo } from 'react';
-import { Bloom } from '@react-three/postprocessing';
 
-import Connections from './Connections';
+import Stargates from './Connections';
 import { System } from 'models/universe';
-import Star from './Star';
+import Regions from './Regions';
 
 type Props = {
   systems: System[];
@@ -33,8 +32,8 @@ const NewEden: FC<Props> = ({ systems }) => {
 
   return (
     <Fragment>
-      <Connections connections={connections} />
-      { systems.map(system => <Star key={system.solarSystemID} system={system} />) }
+      <Stargates connections={connections} />
+      <Regions />
     </Fragment>
   )
 };

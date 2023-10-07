@@ -26,19 +26,19 @@ const Result: FC<Props> = ({
   return (
     <div className="result" onClick={onSelect}>
       <div className="names">
-        <Typography variant="h5">
+        <Typography variant="body1">
           {system.name}
         </Typography>
         {
           !mini && (
-            <Typography variant="subtitle1">
+            <Typography variant="caption">
               {system.regionName}
             </Typography>
           )
         }
       </div>
       <div className="security">
-        <Typography variant="h5">
+        <Typography variant="body2">
           {getClassName(system.wormholeClassID)}
         </Typography>
       </div>

@@ -12,7 +12,7 @@ const SystemNeighbors = () => {
     <Fragment>
       <Divider />
       <div className="system-neighbors">
-        <Typography variant='h4'>Neighbors</Typography>
+        <Typography variant='h6'>Neighbors</Typography>
         {target.neighbors.map(id => <Result mini key={id} systemId={id} />)}
       </div>
     </Fragment>

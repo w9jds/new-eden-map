@@ -1,12 +1,13 @@
-
-
 .kill-feed {
-  @import './KillMail.scss';
+  @import './Card.scss';
 
   display: flex;
   flex-direction: column;
   position: absolute;
   right: 12px;
-  top: 12px;
+  top: 0;
 
+  overflow: auto;
+  max-height: calc(100vh - 12px);
+  margin: 12px 0;
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux';
 import { useFrame } from '@react-three/fiber'
 import { Float32BufferAttribute, BufferGeometry, Line3 } from 'three'
@@ -15,44 +15,40 @@ const Connections = ({ connections }: Props) => {
   const current = useSelector(getCurrentSystem);
   const segmentsRef = useRef(null);
 
-  useEffect(() => {
-    const count = Object.values(connections)
-      .reduce((out, current) => out += current.length * 2, 0);
+  const { positions, stroke, count } = useMemo(() => {
+    const positions = [], stroke = [];
 
-    const { positions, colors, size } = {
-      positions: new Float32Array(count * 3),
-      colors: new Float32Array(count * 3),
-      size: new Float32Array(count),
-    };
-
-    let index = 0;
+    let index = 0, count = 0;
     for (let systemId in connections) {
       const from = systemDetails[systemId];
 
       for (let destinationId of connections[systemId]) {
         const to = systemDetails[destinationId];
 
-        positionToArray(from, positions, index);
-        // getColors(clockTime, from, index).toArray(colors, index * 3);
+        positions.push(
+          +from.position[0] / 1000000000000000,
+          +from.position[1] / 1000000000000000,
+          +from.position[2] / 1000000000000000,
+        );
+
         index++;
 
-        positionToArray(to, positions, index);
-        // getColors(clockTime, to, index).toArray(colors, index * 3);
-        index++;
+        positions.push(
+          +to.position[0] / 1000000000000000,
+          +to.position[1] / 1000000000000000,
+          +to.position[2] / 1000000000000000,
+        );
 
-        if (destinationId == current?.solarSystemID || +systemId == current?.solarSystemID) {
-          size[index] = 3;
-        } else {
-          size[index] = 1;
-        }
+        index++;
       }
     }
 
-    const geometry = segmentsRef.current.geometry as BufferGeometry;
-    geometry.setAttribute('position', new Float32BufferAttribute(positions, 3));
-    geometry.setAttribute('color', new Float32BufferAttribute(colors, 3));
-    geometry.setAttribute('lineSize', new Float32BufferAttribute(size, 1))
-  }, [connections])
+    return {
+      count: index,
+      stroke: new Float32Array(index),
+      positions: new Float32Array(positions),
+    }
+  }, [connections]);
 
   useFrame((state, delta) => {
 
@@ -60,6 +56,10 @@ const Connections = ({ connections }: Props) => {
 
   return (
     <lineSegments ref={segmentsRef}>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-lineSize" count={count} array={stroke} itemSize={1} />
+        <bufferAttribute attach="attributes-position" count={count} array={positions} itemSize={3} />
+      </bufferGeometry>
       <lineBasicMaterial
         opacity={0.2}
         transparent={true}

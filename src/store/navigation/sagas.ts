@@ -13,9 +13,11 @@ function* calculateRoute() {
     const flag = yield select(getFlag);
 
     if (origin && destination) {
-      const data = yield call(fetchRoutes, +origin.key, [destination], [], flag);
+      const data = yield call(fetchRoutes, +origin, [destination], [], flag);
+      debugger;
       yield put(setRoute(data));
     }
+
 
   } catch (error) {
     console.error(error);

@@ -27,10 +27,16 @@ const navigation: Reducer<NavigationState> = handleActions<any>({
     ...state,
     route: action.payload,
   }),
-  [NavigationEvents.TOGGLE_NAV]: (state: NavigationState, action: ReturnType<typeof toggleNav>) => ({
-    ...state,
-    open: action.payload,
-  }),
+  [NavigationEvents.TOGGLE_NAV]: (state: NavigationState, action: ReturnType<typeof toggleNav>) => {
+    if (action.payload === false) {
+      return initialState;
+    }
+
+    return {
+      ...state,
+      open: action.payload,
+    }
+  },
 }, initialState);
 
 export default navigation;

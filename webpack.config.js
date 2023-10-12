@@ -13,6 +13,9 @@ module.exports = {
     filename: 'main.js',
     path: path.resolve(__dirname, './dist'),
   },
+  experiments: {
+    asyncWebAssembly: true,
+  },
   module: {
     rules: [
       {
@@ -86,6 +89,6 @@ module.exports = {
         configFile: path.resolve(__dirname, './tsconfig.json'),
       })
     ],
-    extensions: ['.ts', '*.scss', '.tsx', '.js']
+    extensions: ['.ts', '*.scss', '.tsx', '.js', '.wasm']
   }
 };

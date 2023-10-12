@@ -1,15 +1,18 @@
-import React, { FC, Fragment, useMemo } from 'react';
+import React, { FC, Fragment, useMemo, useState } from 'react';
 import { connect, useDispatch } from 'react-redux';
-import { getDestination, getOrigin, getRoute, isNavOpen } from 'store/navigation/selectors';
 
 import { Close } from '@mui/icons-material';
 import { Button, Divider, Paper, TextField } from '@mui/material';
+import Result from '../Search/Result';
 
+import { System } from 'models/universe';
 import { ApplicationState } from 'models/states';
-import { systemDetails } from 'constants/systems';
-import { toggleNav } from 'store/navigation/actions';
+import { systemDetails, systems } from 'constants/systems';
+import { setDestination, setOrigin, toggleNav } from 'store/navigation/actions';
+import { getDestination, getOrigin, getRoute, isNavOpen } from 'store/navigation/selectors';
 
 import './index.scss';
+
 
 type Props = ReturnType<typeof mapStateToProps>;
 
@@ -21,15 +24,62 @@ const NavigationOverlay: FC<Props> = ({
 }) => {
   const dispatch = useDispatch();
 
+  const [focus, setFocus] = useState('');
+  const [query, setQuery] = useState('');
+  const [options, setOptions] = useState<number[]>([]);
+
   const destination = useMemo(
-    () => systemDetails[destinationId],
-    [destinationId]
+    () => {
+      if (focus === 'destination') {
+        return query;
+      } else if (destinationId) {
+        return systemDetails[destinationId]?.name;
+      }
+    },
+    [destinationId, focus, query]
   );
 
   const origin = useMemo(
-    () => systemDetails[originId],
-    [originId]
+    () => {
+      if (focus === 'origin') {
+        return query;
+      } else if (originId) {
+        return systemDetails[originId]?.name;
+      }
+    },
+    [originId, focus, query]
   );
+
+  const stops = useMemo(
+    () => {
+      if (route) {
+        return route.map(id => systemDetails[id]);
+      }
+    }, [route]
+  )
+
+  const onSearchChange = (e) => {
+    setQuery(e.target.value);
+
+    setOptions(
+      systems
+        .filter(system => new RegExp(e.target.value, 'i').test(system.name))
+        .map(system => system.solarSystemID)
+        .splice(0, 20)
+    );
+  }
+
+  const onResultClick = (system: System) => {
+    if (focus === 'origin') {
+      dispatch(setOrigin(system.solarSystemID));
+    } else if (focus === 'destination') {
+      dispatch(setDestination(system.solarSystemID));
+    }
+
+    setQuery('');
+    setOptions([]);
+    setFocus(undefined);
+  }
 
   const onClose = () => {
     dispatch(toggleNav(false));
@@ -47,30 +97,34 @@ const NavigationOverlay: FC<Props> = ({
         <TextField
           className="origin"
           placeholder='Choose starting point'
-          value={origin?.name} />
+          onFocus={() => setFocus('origin')}
+          onChange={onSearchChange}
+          value={origin} />
         <TextField
           className="destination"
           placeholder='Choose destination'
-          value={destination?.name} />
+          onFocus={() => setFocus('destination')}
+          onChange={onSearchChange}
+          value={destination} />
       </div>
 
       {
-        (!destination || !origin) && (
+        options && (
           <Fragment>
             <Divider />
             <div className="search-results">
-
+              {options.map(option => <Result mini key={option} onClick={onResultClick} systemId={option} />)}
             </div>
           </Fragment>
         )
       }
 
       {
-        route?.length > 0 && (
+        stops?.length > 0 && (
           <Fragment>
             <Divider />
             <div className="path-route">
-
+              {stops.map(stop => <span>{stop?.name}</span>)}
             </div>
           </Fragment>
         )

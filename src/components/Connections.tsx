@@ -16,7 +16,7 @@ const Connections = ({ connections }: Props) => {
   const { vertexs } = useMemo(() => {
     const positions = [];
 
-    for (let systemId in route) {
+    for (let systemId of route) {
       const { position } = systemDetails[systemId];
 
       positions.push(
@@ -73,15 +73,15 @@ const Connections = ({ connections }: Props) => {
   return (
     <Fragment>
       {
-        route && (
-          <lineSegments ref={routeRef}>
+        vertexs.length > 0 && (
+          <line ref={routeRef}>
             <bufferGeometry>
               <bufferAttribute attach="attributes-position" count={route.length} array={vertexs} itemSize={3} />
             </bufferGeometry>
             <lineBasicMaterial
               opacity={1}
             />
-          </lineSegments>
+          </line>
         )
       }
       <lineSegments >

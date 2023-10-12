@@ -8,6 +8,7 @@ export enum NavigationEvents {
   SET_DESTINATION = 'navigation/setDestination',
   SET_ORIGIN = 'navigation/setOrigin',
   SET_ROUTE = 'navigation/setRoute',
+  TOGGLE_NAV = 'navigation/toggleNav',
 }
 
 export enum KillEvents {

@@ -4,13 +4,33 @@
 
   position: absolute;
   background-color: #222 !important;
-  height: 400px;
   width: 400px;
   top: 0px;
+
+  .actions {
+    display: flex;
+    flex-direction: column;
+    height: 56px;
+
+    .close-navigation {
+      min-width: 48px;
+      align-self: flex-end;
+      border-radius: 0;
+
+      svg {
+        fill: white;
+      }
+    }
+  }
 
   .route {
     display: flex;
     flex-direction: column;
+    margin: 0 24px 24px 24px;
+
+    .destination, .origin {
+      margin-top: 8px;
+    }
 
   }
 }

@@ -1,24 +1,40 @@
-import React, { useEffect, useMemo, useRef } from 'react'
+import React, { Fragment, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux';
 import { useFrame } from '@react-three/fiber'
-import { Float32BufferAttribute, BufferGeometry, Line3 } from 'three'
 
 import { systemDetails } from 'constants/systems';
-import { getCurrentSystem } from 'store/current/selectors';
-import { positionToArray } from 'utils/geometry'
+import { getRoute } from 'store/navigation/selectors';
 
 type Props = {
   connections: Record<number, number[]>;
 }
 
 const Connections = ({ connections }: Props) => {
-  const current = useSelector(getCurrentSystem);
-  const segmentsRef = useRef(null);
+  const route = useSelector(getRoute);
+  const routeRef = useRef();
+
+  const { vertexs } = useMemo(() => {
+    const positions = [];
+
+    for (let systemId in route) {
+      const { position } = systemDetails[systemId];
+
+      positions.push(
+        +position[0] / 1000000000000000,
+        +position[1] / 1000000000000000,
+        +position[2] / 1000000000000000,
+      );
+    }
+
+    return {
+      vertexs: new Float32Array(positions),
+    }
+  }, [route]);
 
   const { positions, stroke, count } = useMemo(() => {
-    const positions = [], stroke = [];
+    const positions = [];
 
-    let index = 0, count = 0;
+    let index = 0;
     for (let systemId in connections) {
       const from = systemDetails[systemId];
 
@@ -55,16 +71,30 @@ const Connections = ({ connections }: Props) => {
   })
 
   return (
-    <lineSegments ref={segmentsRef}>
-      <bufferGeometry>
-        <bufferAttribute attach="attributes-lineSize" count={count} array={stroke} itemSize={1} />
-        <bufferAttribute attach="attributes-position" count={count} array={positions} itemSize={3} />
-      </bufferGeometry>
-      <lineBasicMaterial
-        opacity={0.2}
-        transparent={true}
-      />
-    </lineSegments>
+    <Fragment>
+      {
+        route && (
+          <lineSegments ref={routeRef}>
+            <bufferGeometry>
+              <bufferAttribute attach="attributes-position" count={route.length} array={vertexs} itemSize={3} />
+            </bufferGeometry>
+            <lineBasicMaterial
+              opacity={1}
+            />
+          </lineSegments>
+        )
+      }
+      <lineSegments >
+        <bufferGeometry>
+          <bufferAttribute attach="attributes-lineSize" count={count} array={stroke} itemSize={1} />
+          <bufferAttribute attach="attributes-position" count={count} array={positions} itemSize={3} />
+        </bufferGeometry>
+        <lineBasicMaterial
+          opacity={0.2}
+          transparent={true}
+        />
+      </lineSegments>
+    </Fragment>
   );
 }
 

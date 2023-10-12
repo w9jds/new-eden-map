@@ -18,6 +18,7 @@ export type NavigationState = {
   readonly open: boolean;
   readonly start: number;
   readonly end: number;
+  readonly flag: 'shortest' | 'secure' | 'known';
 
   readonly route: number[];
 }

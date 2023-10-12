@@ -8,14 +8,17 @@ import SearchResult from './Result';
 
 import { System } from 'models/universe';
 import { systems } from 'constants/systems';
+import { isNavOpen } from 'store/navigation/selectors';
 import { setCurrentSystem } from 'store/current/actions';
 import { getCurrentSystem } from 'store/current/selectors';
 
 import './index.scss';
 
 const SearchOverlay = () => {
-  const current = useSelector(getCurrentSystem);
   const dispatch = useDispatch();
+  const current = useSelector(getCurrentSystem);
+  const isNavigating = useSelector(isNavOpen);
+
   const [value, setValue] = useState('');
   const [isOpen, setOpen] = useState(false);
   const [options, setOptions] = useState<number[]>([]);
@@ -63,7 +66,7 @@ const SearchOverlay = () => {
     setOptions([]);
   }
 
-  return (
+  return !isNavigating && (
     <Paper className={overlay}>
       <div className="search-bar">
         <input className="search"

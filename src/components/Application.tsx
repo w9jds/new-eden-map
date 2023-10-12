@@ -17,6 +17,7 @@ import NewEden from './NewEden';
 import Effects from './Effects';
 import SystemOverlay from 'controls/Overlays/System';
 import SearchOverlay from 'controls/Overlays/Search';
+import NavigationOverlay from 'controls/Overlays/Navigation';
 import KillFeed from 'controls/Overlays/KillFeed';
 
 import './Application.scss';
@@ -85,6 +86,7 @@ const Application = () => {
 
       <SystemOverlay />
       <SearchOverlay />
+      <NavigationOverlay />
       <KillFeed />
     </Fragment>
   );

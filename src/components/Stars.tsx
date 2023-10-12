@@ -1,18 +1,17 @@
 import React, { FC, Fragment, useMemo, useState, useRef } from 'react';
 import { useSelector } from 'react-redux';
 
-import { BufferGeometry, Group, Color, MathUtils, Points, TextureLoader } from 'three';
+import { BufferGeometry, Group, Color, MathUtils, Points, TextureLoader, Vector3, Vector2, ShaderMaterial } from 'three';
 import { useFrame } from '@react-three/fiber';
 
 import { systemDetails } from 'constants/systems';
-import { getKillSystems } from 'store/kills/selectors';
-import glow from 'textures/glow.png';
+import glow from 'textures/glow_texture.png';
 
 type Props = {
   ids: number[];
 }
 
-const VERTEX_SHADER = `
+const STAR_VERTEX = `
   attribute float size;
   attribute vec3 flareColor;
   varying vec3 vColor;
@@ -25,7 +24,7 @@ const VERTEX_SHADER = `
   }
 `
 
-const FRAGMENT_SHADER = `
+const STAR_FRAGMENT = `
   uniform vec3 color;
   uniform sampler2D pointTexture;
   varying vec3 vColor;
@@ -36,9 +35,34 @@ const FRAGMENT_SHADER = `
   }
 `
 
+// const VERTEX_SHADER = `
+//   attribute float size;
+//   attribute vec3 flareColor;
+//   varying vec3 vColor;
+
+//   void main() {
+//     vColor = flareColor;
+//     vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+//     gl_PointSize = size * (300.0 / -mvPosition.z);
+//     gl_Position = projectionMatrix * mvPosition;
+//   }
+// `
+
+// const FRAGMENT_SHADER = `
+//   uniform vec3 color;
+//   uniform sampler2D pointTexture;
+//   varying vec3 vColor;
+
+//   void main() {
+//     gl_FragColor = vec4(color * vColor, 1.0);
+//     gl_FragColor = gl_FragColor * texture2D( pointTexture, gl_PointCoord );
+//   }
+// `
+
 const twinkleSpeed = 0.85;
 const clockWarparound = 60 * 60 * 1000;
-const flareTexture = new TextureLoader().load(glow);
+
+const flareTexture = new TextureLoader().load(glow)
 
 const uniforms = {
   color: { value: new Color() },
@@ -46,18 +70,17 @@ const uniforms = {
 }
 
 const Stars: FC<Props> = ({ ids }) => {
-  const groupRef = useRef<Group>();
-  const regionRef = useRef<Points>();
+  const starRef = useRef<Points>();
   const clockTime = useRef(0);
-  const activeKills = useSelector(getKillSystems);
   const [ hovered, setHover ] = useState(false);
 
   const { positions, radii, colors } = useMemo(() => {
     const positions = [], radii = [], systemIds = [];
 
     for (let i = 0; i < ids.length; i++) {
-      const  { radius, position } = systemDetails[ids[i]];
+      const  { solarSystemID, radius, position } = systemDetails[ids[i]];
 
+      systemIds.push(solarSystemID);
       radii.push(2.0 * (radius / 1000000000000));
       positions.push(
         position[0] / 1000000000000000,
@@ -67,6 +90,7 @@ const Stars: FC<Props> = ({ ids }) => {
     }
 
     return {
+      systemIds,
       radii: new Float32Array(radii),
       positions: new Float32Array(positions),
       colors: new Float32Array(ids.length * 3),
@@ -76,8 +100,9 @@ const Stars: FC<Props> = ({ ids }) => {
   useFrame((state, delta) => {
     clockTime.current = (clockTime.current + delta) % clockWarparound;
 
-    if (regionRef.current) {
-      const geometry = regionRef.current.geometry as BufferGeometry;
+    if (starRef.current) {
+      const geometry = starRef.current.geometry as BufferGeometry;
+      const material = starRef.current.material as ShaderMaterial;
 
       for (let i = 0; i < ids.length; i++) {
         const  { security } = systemDetails[ids[i]];
@@ -106,19 +131,18 @@ const Stars: FC<Props> = ({ ids }) => {
 
   return ids && (
     <Fragment>
-      <group ref={groupRef} />
-      <points ref={regionRef} onPointerEnter={onRegionEnter} onPointerLeave={onRegionLeave}>
-        <sphereGeometry>
-          {/* <bufferAttribute attach="systemId" count={ids.length} array={ids} itemSize={1} /> */}
+      <points ref={starRef} onPointerEnter={onRegionEnter} onPointerLeave={onRegionLeave}>
+        <sphereGeometry attach="geometry">
           <bufferAttribute attach="attributes-size" count={ids.length} array={radii} itemSize={1} />
           <bufferAttribute attach="attributes-position" count={ids.length} array={positions} itemSize={3} />
           <bufferAttribute attach="attributes-flareColor" count={ids.length} array={colors} itemSize={3} />
         </sphereGeometry>
-        <pointsMaterial />
         <shaderMaterial
+          transparent
           uniforms={uniforms}
-          vertexShader={VERTEX_SHADER}
-          fragmentShader={FRAGMENT_SHADER}
+          depthFunc={1}
+          vertexShader={STAR_VERTEX}
+          fragmentShader={STAR_FRAGMENT}
         />
       </points>
     </Fragment>

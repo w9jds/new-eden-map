@@ -17,13 +17,17 @@ const Connections = ({ connections }: Props) => {
     const positions = [];
 
     for (let systemId of route) {
-      const { position } = systemDetails[systemId];
+      const details = systemDetails[systemId];
 
-      positions.push(
-        +position[0] / 1000000000000000,
-        +position[1] / 1000000000000000,
-        +position[2] / 1000000000000000,
-      );
+      if (details) {
+        const { position } = details;
+
+        positions.push(
+          +position[0] / 1000000000000000,
+          +position[1] / 1000000000000000,
+          +position[2] / 1000000000000000,
+        );
+      }
     }
 
     return {

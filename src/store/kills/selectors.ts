@@ -24,4 +24,5 @@ export const getKillFeed = createSelector(
 export const getKillSystems = createSelector(
   [getFeed, getVisibleKillIds], (kills, ids) => ids
     .map(id => kills[id].solar_system_id)
+    .filter((value, index, self) => self.indexOf(value) === index)
 );

@@ -1,3 +1,4 @@
+@import "../../../stylesheets/placeholders.scss";
 
 .navigation-overlay {
   border-radius: 0 0 24px 24px !important;
@@ -10,7 +11,7 @@
   .actions {
     display: flex;
     flex-direction: column;
-    height: 56px;
+    height: 48px;
 
     .close-navigation {
       min-width: 48px;
@@ -32,5 +33,36 @@
       margin-top: 8px;
     }
 
+  }
+
+  .search-results {
+    @extend %search-results;
+  }
+
+  .pathing {
+    max-height: 45vh;
+    overflow: auto;
+
+    h6 {
+      margin: 12px 24px;
+    }
+
+    &-route {
+      padding: 0 0 12px 0;
+
+      .stop {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 8px 24px;
+        margin: auto 0;
+
+        &:hover {
+          background-color: #ffffff0f;
+          cursor: pointer;
+        }
+
+      }
+    }
   }
 }

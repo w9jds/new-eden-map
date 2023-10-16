@@ -2,7 +2,7 @@ import React, { FC, Fragment, useMemo, useState } from 'react';
 import { connect, useDispatch } from 'react-redux';
 
 import { Close } from '@mui/icons-material';
-import { Button, Divider, Paper, TextField } from '@mui/material';
+import { Button, Divider, Paper, TextField, Typography } from '@mui/material';
 import Result from '../Search/Result';
 
 import { System } from 'models/universe';
@@ -56,7 +56,13 @@ const NavigationOverlay: FC<Props> = ({
         return route.map(id => systemDetails[id]);
       }
     }, [route]
-  )
+  );
+
+  const resetState = () => {
+    setQuery('');
+    setOptions([]);
+    setFocus(undefined);
+  }
 
   const onSearchChange = (e) => {
     setQuery(e.target.value);
@@ -76,12 +82,16 @@ const NavigationOverlay: FC<Props> = ({
       dispatch(setDestination(system.solarSystemID));
     }
 
-    setQuery('');
-    setOptions([]);
-    setFocus(undefined);
+    resetState();
+  }
+
+  const onInputBlur = (...args) => {
+    // debugger;
+    // resetState();
   }
 
   const onClose = () => {
+    resetState();
     dispatch(toggleNav(false));
   }
 
@@ -94,17 +104,19 @@ const NavigationOverlay: FC<Props> = ({
       </div>
 
       <div className="route">
-        <TextField
+        <TextField size="small"
           className="origin"
           placeholder='Choose starting point'
           onFocus={() => setFocus('origin')}
           onChange={onSearchChange}
+          onBlur={onInputBlur}
           value={origin} />
-        <TextField
+        <TextField size="small"
           className="destination"
           placeholder='Choose destination'
           onFocus={() => setFocus('destination')}
           onChange={onSearchChange}
+          onBlur={onInputBlur}
           value={destination} />
       </div>
 
@@ -120,11 +132,22 @@ const NavigationOverlay: FC<Props> = ({
       }
 
       {
-        stops?.length > 0 && (
+        stops?.length > 0 && !focus && (
           <Fragment>
             <Divider />
-            <div className="path-route">
-              {stops.map(stop => <span>{stop?.name}</span>)}
+            <div className="pathing">
+              <Typography variant="h6">
+                {`${stops.length - 1} Jumps`}
+              </Typography>
+
+              <div className="pathing-route">
+                {stops.map(stop =>
+                  <div key={stop?.solarSystemID} className="stop">
+                    <span>{stop?.name}</span>
+                    <span>{stop?.security.toFixed(1)}</span>
+                  </div>
+                )}
+              </div>
             </div>
           </Fragment>
         )

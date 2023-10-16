@@ -14,10 +14,8 @@ function* calculateRoute() {
 
     if (origin && destination) {
       const data = yield call(fetchRoutes, +origin, [destination], [], flag);
-      debugger;
       yield put(setRoute(data));
     }
-
 
   } catch (error) {
     console.error(error);
@@ -29,7 +27,6 @@ const fetchRoutes = async (originId: number, destinations: number[], connections
   const ends = new Uint32Array(destinations);
   const routes = await calc_weighted_routes(originId, ends, flag, connections);
 
-  debugger;
   return routes[0];
 }
 

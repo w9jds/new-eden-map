@@ -38,7 +38,7 @@ const NewEden: FC<Props> = ({ systems }) => {
   return (
     <Fragment>
       <Stargates connections={connections} />
-
+      { active.map(systemId => <Pulse key={`pulse-${systemId}`} id={systemId} />) }
       <Regions />
     </Fragment>
   )

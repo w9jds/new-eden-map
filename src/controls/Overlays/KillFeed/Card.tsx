@@ -33,7 +33,7 @@ const KillCard: FC<KillProps> = ({ data }) => {
   );
 
   const onKillOpen = () => {
-    window.open(`https://zkillboard.com/kill/${data.killmail_id}`);
+    window.open(`https://zkillboard.com/kill/${data.killmail_id}/`);
   }
 
   return data && !data?.seen && (

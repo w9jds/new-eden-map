@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 
 import { Divider, Typography } from '@mui/material';
 import { getCurrentSystem } from 'store/current/selectors';
-import Result from '../Search/Result';
+import SystemTile from 'controls/SystemTile';
 
 const SystemNeighbors = () => {
   const target = useSelector(getCurrentSystem);
@@ -13,7 +13,7 @@ const SystemNeighbors = () => {
       <Divider />
       <div className="system-neighbors">
         <Typography variant='h6'>Neighbors</Typography>
-        {target.neighbors.map(id => <Result mini key={id} systemId={id} />)}
+        {target.neighbors.map(id => <SystemTile mini key={id} systemId={id} />)}
       </div>
     </Fragment>
   );

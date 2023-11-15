@@ -1,7 +1,7 @@
 
 
-%search-results {
-  @import '../controls/Overlays/Search/Result.scss';
+%system-tile {
+  @import '../controls/SystemTile.scss';
 
   display: flex;
   flex-direction: column;

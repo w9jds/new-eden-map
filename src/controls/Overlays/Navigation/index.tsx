@@ -3,7 +3,7 @@ import { connect, useDispatch } from 'react-redux';
 
 import { Close } from '@mui/icons-material';
 import { Button, Divider, Paper, TextField, Typography } from '@mui/material';
-import Result from '../Search/Result';
+import SystemTile from 'controls/SystemTile';
 
 import { System } from 'models/universe';
 import { ApplicationState } from 'models/states';
@@ -75,7 +75,7 @@ const NavigationOverlay: FC<Props> = ({
     );
   }
 
-  const onResultClick = (system: System) => {
+  const onResultClick = (e, system: System) => {
     if (focus === 'origin') {
       dispatch(setOrigin(system.solarSystemID));
     } else if (focus === 'destination') {
@@ -85,9 +85,10 @@ const NavigationOverlay: FC<Props> = ({
     resetState();
   }
 
-  const onInputBlur = (...args) => {
-    // debugger;
-    // resetState();
+  const onInputBlur = e => {
+    if (e?.relatedTarget?.id !== 'system-tile') {
+      resetState();
+    }
   }
 
   const onClose = () => {
@@ -125,7 +126,7 @@ const NavigationOverlay: FC<Props> = ({
           <Fragment>
             <Divider />
             <div className="search-results">
-              {options.map(option => <Result mini key={option} onClick={onResultClick} systemId={option} />)}
+              {options.map(option => <SystemTile mini key={option} onClick={onResultClick} systemId={option} />)}
             </div>
           </Fragment>
         )

@@ -2,9 +2,9 @@ import React, { Fragment, useState, useMemo, useEffect } from 'react';
 import classnames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 
+import SystemTile from 'controls/SystemTile';
 import { Button, Divider, Paper } from '@mui/material';
 import { Close } from '@mui/icons-material';
-import SearchResult from './Result';
 
 import { System } from 'models/universe';
 import { systems } from 'constants/systems';
@@ -60,7 +60,7 @@ const SearchOverlay = () => {
     );
   }
 
-  const onResultClick = (system: System) => {
+  const onResultClick = (e, system: System) => {
     dispatch(setCurrentSystem(system));
     setValue(system.name);
     setOptions([]);
@@ -88,7 +88,7 @@ const SearchOverlay = () => {
           <Fragment>
             <Divider />
             <div className="search-results">
-              {options.map(option => <SearchResult key={option} onClick={onResultClick} systemId={option} />)}
+              {options.map(option => <SystemTile key={option} onClick={onResultClick} systemId={option} />)}
             </div>
           </Fragment>
         )

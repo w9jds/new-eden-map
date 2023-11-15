@@ -1,30 +1,30 @@
 import React, { FC, useMemo } from 'react';
 import { systemDetails } from 'constants/systems';
-import { Typography } from '@mui/material';
+import { MenuItem, Typography } from '@mui/material';
 import { getClassName } from 'utils/universe';
 import { System } from 'models/universe';
 
 type Props = {
   mini?: boolean;
   systemId: number;
-  onClick?: (details: System) => void;
+  onClick?: (e, details: System) => void;
 }
 
-const Result: FC<Props> = ({
+const SystemTile: FC<Props> = ({
   mini = false,
   systemId,
   onClick
 }) => {
   const system = useMemo(() => systemDetails[systemId], [systemId]);
 
-  const onSelect = () => {
+  const onSelect = e => {
     if (onClick) {
-      onClick(system);
+      onClick(e, system);
     }
   }
 
   return (
-    <div className="result" onClick={onSelect}>
+    <MenuItem id="system-tile" className="result" onClick={onSelect}>
       <div className="names">
         <Typography variant="body1">
           {system.name}
@@ -42,8 +42,8 @@ const Result: FC<Props> = ({
           {getClassName(system.wormholeClassID)}
         </Typography>
       </div>
-    </div>
+    </MenuItem>
   );
 }
 
-export default Result;
+export default SystemTile;

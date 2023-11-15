@@ -1,20 +1,16 @@
 import React, { FC, Fragment, useMemo } from 'react';
-import { useSelector } from 'react-redux';
 
 import Stargates from './Connections';
 import Regions from './Regions';
+import Kills from './Kills';
 
 import { System } from 'models/universe';
-import { getKillSystems } from 'store/kills/selectors';
-import Pulse from './Kills';
 
 type Props = {
   systems: System[];
 }
 
 const NewEden: FC<Props> = ({ systems }) => {
-  const active = useSelector(getKillSystems);
-
   const connections = useMemo(() => {
     const segments = {};
 
@@ -38,7 +34,7 @@ const NewEden: FC<Props> = ({ systems }) => {
   return (
     <Fragment>
       <Stargates connections={connections} />
-      { active.map(systemId => <Pulse key={`pulse-${systemId}`} id={systemId} />) }
+      <Kills />
       <Regions />
     </Fragment>
   )

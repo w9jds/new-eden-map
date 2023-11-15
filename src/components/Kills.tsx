@@ -1,79 +1,88 @@
-import { useFrame } from '@react-three/fiber';
 import React, { Fragment, useMemo, useRef } from 'react';
-import { Mesh, ShaderMaterial, Vector2, Vector3 } from 'three';
+import { useSelector } from 'react-redux';
+import { Mesh, Points, ShaderMaterial, Vector2, Vector3 } from 'three';
+import { useFrame } from '@react-three/fiber';
 
 import { systemDetails } from 'constants/systems';
+import { getKillSystems } from 'store/kills/selectors';
 
 const PULSE_VERTEX = `
-  varying vec2 screenPosition;
+  #include <common>
+
+  varying vec2 vUv;
 
   void main() {
-    vec4 mvPosition = vec4(position, 1.0);
-    screenPosition = mvPosition;
-    gl_Position = mvPosition;
+    vUv = uv;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.);
   }
 `
 
 const PULSE_FRAGMENT = `
-  varying vec2 screenPosition;
+  varying vec2 vUv;
+
   uniform vec2 u_resolution;
   uniform float u_time;
 
   void main() {
-    vec2 uv = gl_FragCoord.xy;
-    vec2 center = screenPosition;
+    vec2 uv = gl_FragCoord.xy * vUv;
+    vec2 center = u_resolution * 0.5;
 
     float d = distance(uv, center);
     float r = sin(fract(u_time));
 
     float alpha = smoothstep(d - (r * 250.), d + (r * 200.), 0.);
-    gl_FragColor = vec4(1., 0., 0., alpha);
+    gl_FragColor = vec4(1., 0., 0., 1.);
   }
 `
-
-//     vec2 uv = gl_FragCoord.xy;
-//     vec2 center = u_resolution * 0.5;
-//     float d = distance(uv, center);
-
-//     float alpha = smoothstep(d - (u_resolution.x / 1.75), d - 1., 0.);
-//     gl_FragColor = vec4(u_color, alpha);
 
 const uniform = {
   u_time: { type: "f", value: 1.0 },
   u_resolution: {
     type: "v2",
-    value: new Vector2(window.innerWidth, window.innerHeight)
+    value: new Vector2(
+      window.innerWidth,
+      window.innerHeight
+    )
   },
 }
 
-const Pulse = ({ id }) => {
+const Pulses = () => {
   const meshRef = useRef<Mesh>();
+  const active = useSelector(getKillSystems);
 
-  const { position } = useMemo(() => {
-    const  { position } = systemDetails[id];
-    const coord = new Vector3(
-      position[0] / 1000000000000000,
-      position[1] / 1000000000000000,
-      position[2] / 1000000000000000
-    );
+  const { positions } = useMemo(() => {
+    const positions = [];
+
+    for (let i = 0; i < active.length; i++) {
+      const { position } = systemDetails[active[i]];
+
+      positions.push(
+        position[0] / 1000000000000000,
+        position[1] / 1000000000000000,
+        position[2] / 1000000000000000
+      );
+    }
 
     return {
-      position: coord,
+      positions: new Float32Array(positions),
     }
-  }, [id]);
+  }, [active]);
 
   useFrame((state, delta) => {
     const material = meshRef.current.material as ShaderMaterial;
 
-    if (material && id) {
+    if (material && active) {
       material.uniforms.u_time.value += state.clock.getDelta();
     }
   })
 
-  return id && (
+  return active && (
     <Fragment>
-      <mesh ref={meshRef} position={position}>
-        <sphereGeometry args={[6, 25, 25]} />
+      <mesh ref={meshRef}>
+        <sphereGeometry attach="geometry" args={[6, 25, 25]}>
+          <bufferAttribute attach="attributes-position" count={active.length} array={positions} itemSize={3} />
+        </sphereGeometry>
+
         <shaderMaterial
           transparent
           depthFunc={1}
@@ -86,4 +95,4 @@ const Pulse = ({ id }) => {
   );
 }
 
-export default Pulse;
+export default Pulses;

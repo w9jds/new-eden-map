@@ -86,5 +86,4 @@ def generateSystemData():
   with open("../src/constants/systems.json", "w") as outfile:
     json.dump(data, outfile)
 
-
 generateSystemData()

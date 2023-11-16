@@ -29,7 +29,7 @@ const SystemOverlay: FC<Props> = () => {
   }
 
   const onZKillboard = () => {
-    window.open(`https://zkillboard.com/system/${system.solarSystemID}`);
+    window.open(`https://zkillboard.com/system/${system.solarSystemID}/`);
   }
 
   const onDotlan = () => {

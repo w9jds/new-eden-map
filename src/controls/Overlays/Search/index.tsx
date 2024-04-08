@@ -8,8 +8,8 @@ import { Close } from '@mui/icons-material';
 
 import { System } from 'models/universe';
 import { systems } from 'constants/systems';
+import { setSystem } from 'store/current/reducer';
 import { isNavOpen } from 'store/navigation/selectors';
-import { setCurrentSystem } from 'store/current/actions';
 import { getCurrentSystem } from 'store/current/selectors';
 
 import './index.scss';
@@ -45,7 +45,7 @@ const SearchOverlay = () => {
   }), [isOpen]);
 
   const onClear = () => {
-    dispatch(setCurrentSystem(null));
+    dispatch(setSystem(null));
     setValue('');
   }
 
@@ -61,7 +61,7 @@ const SearchOverlay = () => {
   }
 
   const onResultClick = (e, system: System) => {
-    dispatch(setCurrentSystem(system));
+    dispatch(setSystem(system));
     setValue(system.name);
     setOptions([]);
   }

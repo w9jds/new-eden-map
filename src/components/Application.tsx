@@ -10,11 +10,10 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { FirebaseConfig } from 'config';
 import { systems } from 'constants/systems';
 import { getCurrentSystem } from 'store/current/selectors';
-import { setFirebaseApp } from 'store/current/actions';
-import { registerKillFeed } from 'store/kills/actions';
+import { setFirebaseApp } from 'store/current/reducer';
+import { registerFeed } from 'store/kills/reducer';
 
 import NewEden from './NewEden';
-import Effects from './Effects';
 import SystemOverlay from 'controls/Overlays/System';
 import SearchOverlay from 'controls/Overlays/Search';
 import NavigationOverlay from 'controls/Overlays/Navigation';
@@ -73,7 +72,7 @@ const Application = () => {
   useEffect(() => {
     const firebaseApp = initializeApp(FirebaseConfig);
     dispatch(setFirebaseApp(firebaseApp));
-    dispatch(registerKillFeed());
+    dispatch(registerFeed());
   }, []);
 
   return (
@@ -81,7 +80,6 @@ const Application = () => {
       <Canvas gl={{ antialias: true, pixelRatio: window.devicePixelRatio, logarithmicDepthBuffer: true }}>
         <Camera />
         <NewEden systems={systems} />
-        <Effects />
       </Canvas>
 
       <SystemOverlay />

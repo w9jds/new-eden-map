@@ -8,7 +8,7 @@ import Attackers from './Attackers';
 import Victim from './Victim';
 
 import { useKillUtils } from './effects';
-import { flagKillAsSeen } from 'store/kills/actions';
+import { removeKill } from 'store/kills/reducer';
 import { KillMail } from 'models/killmail';
 
 type KillProps = {
@@ -22,7 +22,7 @@ const KillCard: FC<KillProps> = ({ data }) => {
   useEffect(() => {
     setTimeout(() => {
       if (data?.killmail_id) {
-        dispatch(flagKillAsSeen(data.killmail_id))
+        dispatch(removeKill(data.killmail_id))
       }
     }, 30000);
   }, []);
@@ -36,7 +36,7 @@ const KillCard: FC<KillProps> = ({ data }) => {
     window.open(`https://zkillboard.com/kill/${data.killmail_id}/`);
   }
 
-  return data && !data?.seen && (
+  return data && (
     <Paper key={data.killmail_id} className="killmail" onClick={onKillOpen}>
       <Victim data={data.victim} img={victim} names={data.names} />
       <div className="details">

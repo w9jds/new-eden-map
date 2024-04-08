@@ -1,9 +1,5 @@
-import { Reducer } from 'redux';
-import { handleActions } from 'redux-actions';
-
-import { NavigationEvents } from 'store/events';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { NavigationState } from 'models/states';
-import { setDestination, setRoute, setOrigin, toggleNav } from './actions';
 
 const initialState: NavigationState = {
   open: false,
@@ -14,29 +10,31 @@ const initialState: NavigationState = {
   route: [],
 };
 
-const navigation: Reducer<NavigationState> = handleActions<any>({
-  [NavigationEvents.SET_DESTINATION]: (state: NavigationState, action: ReturnType<typeof setDestination>) => ({
-    ...state,
-    end: action.payload,
-  }),
-  [NavigationEvents.SET_ORIGIN]: (state: NavigationState, action: ReturnType<typeof setOrigin>) => ({
-    ...state,
-    start: action.payload,
-  }),
-  [NavigationEvents.SET_ROUTE]: (state: NavigationState, action: ReturnType<typeof setRoute>) => ({
-    ...state,
-    route: action.payload,
-  }),
-  [NavigationEvents.TOGGLE_NAV]: (state: NavigationState, action: ReturnType<typeof toggleNav>) => {
-    if (action.payload === false) {
-      return initialState;
-    }
+const navigationSlice = createSlice({
+  name: 'navigation',
+  initialState,
+  reducers: {
+    setDestination: (state, action: PayloadAction<number>) => {
+      state.end = action.payload;
+    },
+    setOrigin: (state, action: PayloadAction<number>) => {
+      state.start = action.payload;
+    },
+    setRoute: (state, action: PayloadAction<number[]>) => {
+      state.route = action.payload;
+    },
+    toggleNav: (state, action: PayloadAction<boolean>) => {
+      if (action.payload === false) {
+        state.start = undefined;
+        state.end = undefined;
+        state.route = [];
+      }
 
-    return {
-      ...state,
-      open: action.payload,
+      state.open = action.payload;
     }
-  },
-}, initialState);
+  }
+})
 
-export default navigation;
+export const { setDestination, setOrigin, setRoute, toggleNav } = navigationSlice.actions;
+
+export default navigationSlice;

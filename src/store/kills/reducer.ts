@@ -1,45 +1,29 @@
-import { Reducer } from 'redux';
-import { handleActions } from 'redux-actions';
-
-import { KillEvents } from 'store/events';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { KillMail } from 'models/killmail';
 import { KillState } from 'models/states';
-import { addNewKill, flagKillAsSeen, removeKill } from './actions';
 
 const initialState: KillState = {
   feed: {},
 };
 
-const kill: Reducer<KillState> = handleActions<any>({
-  [KillEvents.ADD_NEW_KILL]: (state: KillState, action: ReturnType<typeof addNewKill>) => ({
-    ...state,
-    feed: {
-      ...state.feed,
-      [action.payload.killmail_id]: {
+const killSlice = createSlice({
+  name: 'kills',
+  initialState,
+  reducers: {
+    addKill: (state, action: PayloadAction<KillMail>) => {
+      state.feed[action.payload.killmail_id] = {
         ...action.payload,
         reported: new Date(),
-        seen: false,
       }
-    }
-  }),
-  [KillEvents.REMOVE_KILL]: (state: KillState, action: ReturnType<typeof removeKill>) => ({
-    ...state,
-    feed: Object.keys(state.feed)
-      .filter(key => +key !== action.payload)
-      .reduce((result, current) => {
-        result[current] = state.feed[current];
-        return result;
-      }, {})
-  }),
-  [KillEvents.FLAG_KILL_AS_SEEN]: (state: KillState, action: ReturnType<typeof flagKillAsSeen>) => ({
-    ...state,
-    feed: {
-      ...state.feed,
-      [action.payload]: {
-        ...state.feed[action.payload],
-        seen: true,
-      }
-    }
-  }),
-}, initialState);
+    },
+    removeKill: (state, action: PayloadAction<number>) => {
+      delete state.feed[action.payload];
+    },
 
-export default kill;
+    registerFeed: () => {}
+  }
+})
+
+export const { registerFeed, addKill, removeKill } = killSlice.actions;
+
+export default killSlice;

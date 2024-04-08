@@ -1,6 +1,6 @@
 import React, { Fragment, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
-import { Mesh, Points, ShaderMaterial, Vector2, Vector3 } from 'three';
+import { Mesh, ShaderMaterial, Vector2 } from 'three';
 import { useFrame } from '@react-three/fiber';
 
 import { systemDetails } from 'constants/systems';

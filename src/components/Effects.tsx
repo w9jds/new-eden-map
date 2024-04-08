@@ -1,12 +1,12 @@
-import React from 'react';
-import { EffectComposer, Outline } from '@react-three/postprocessing'
+// import React from 'react';
+// import { EffectComposer, Outline } from '@react-three/postprocessing'
 
-const Effects = () => {
-  return (
-    <EffectComposer disableNormalPass>
+// const Effects = () => {
+//   return (
+//     <EffectComposer disableNormalPass>
 
-    </EffectComposer>
-  );
-}
+//     </EffectComposer>
+//   );
+// }
 
-export default Effects;
+// export default Effects;

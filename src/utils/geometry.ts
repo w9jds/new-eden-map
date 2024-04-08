@@ -1,5 +1,5 @@
 import { System } from 'models/universe';
-import { Vector3, BufferAttribute, Color } from 'three';
+import { Vector3, BufferAttribute, Color, BufferGeometry } from 'three';
 
 export const buildAttributes = (count: number) => ({
   positions: new Float32Array(count * 3),
@@ -7,7 +7,7 @@ export const buildAttributes = (count: number) => ({
   scales: new Float32Array(count),
 })
 
-export const setAttributes = (geometry: THREE.BufferGeometry, positions: Float32Array, colors: Float32Array, scales: Float32Array) => {
+export const setAttributes = (geometry: BufferGeometry, positions: Float32Array, colors: Float32Array, scales: Float32Array) => {
   geometry.setAttribute('position', new BufferAttribute(positions, 3));
   geometry.setAttribute('flareColor', new BufferAttribute(colors, 3));
   geometry.setAttribute('size', new BufferAttribute(scales, 1));

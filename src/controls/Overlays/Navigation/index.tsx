@@ -8,7 +8,7 @@ import SystemTile from 'controls/SystemTile';
 import { System } from 'models/universe';
 import { ApplicationState } from 'models/states';
 import { systemDetails, systems } from 'constants/systems';
-import { setDestination, setOrigin, toggleNav } from 'store/navigation/actions';
+import { setDestination, setOrigin, toggleNav } from 'store/navigation/reducer';
 import { getDestination, getOrigin, getRoute, isNavOpen } from 'store/navigation/selectors';
 
 import './index.scss';

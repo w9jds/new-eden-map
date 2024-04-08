@@ -10,9 +10,9 @@ import Zkillboard from 'assets/zkill-logo.svg';
 import Dotlan from 'assets/dotlan-logo.svg';
 import background from 'assets/overlay-header.jpg';
 
-import { setDestination, toggleNav } from 'store/navigation/actions';
-import { getCurrentSystem } from 'store/current/selectors';
 import { isNavOpen } from 'store/navigation/selectors';
+import { getCurrentSystem } from 'store/current/selectors';
+import { setDestination, toggleNav } from 'store/navigation/reducer';
 
 import './index.scss';
 

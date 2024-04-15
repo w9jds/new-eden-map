@@ -1,6 +1,6 @@
 import { FirebaseApp } from 'firebase/app';
 
-import { System } from './universe';
+import { System, SystemStatistics } from './universe';
 import { KillMail } from './killmail';
 
 export type ApplicationState = {
@@ -11,7 +11,9 @@ export type ApplicationState = {
 
 export type CurrentState = {
   readonly firebase: FirebaseApp;
+  
   readonly system: System;
+  readonly statistics: SystemStatistics;
 }
 
 export type NavigationState = {

@@ -17,13 +17,5 @@
   & > div {
     display: flex;
     padding: 0px 24px;
-
-    & > div {
-      width: 50%;
-
-      h5:not(:last-of-type) {
-        padding: 4px 0;
-      }
-    }
   }
 }

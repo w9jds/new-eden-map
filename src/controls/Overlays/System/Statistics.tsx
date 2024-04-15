@@ -1,42 +1,30 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment } from 'react';
 import { useSelector } from 'react-redux';
-import { onValue, ref } from 'firebase/database';
 
-import { Statistics } from 'models/universe';
-import { getCurrentSystem, getFbDatabase } from 'store/current/selectors';
+import ChartTooltip from './ChartTooltip';
+import { LineChart, Line, Tooltip, ResponsiveContainer} from 'recharts';
 import { Divider, Typography } from '@mui/material';
 
+import { getStatisticData } from 'store/current/selectors';
+
 const SystemStatistics = () => {
-  const target = useSelector(getCurrentSystem);
-  const database = useSelector(getFbDatabase);
-  const [stats, setStats] = useState<Statistics>();
+  const data = useSelector(getStatisticData);
 
-  useEffect(() => {
-    setStats(null);
-
-    onValue(
-      ref(database, `universe/systems/k_space/${target.solarSystemID}/statistics`),
-      (snapshot) => setStats(snapshot.val()),
-    );
-
-    return () => setStats(null);
-  }, [target]);
-
-  return stats && (
+  return data && (
     <Fragment>
       <Divider />
       <div className='system-statistics'>
         <Typography variant="h6">Hourly Activity</Typography>
-        <div>
-          <div>
-            <Typography variant="body2"> {`${stats?.jumps || 0} Jumps`} </Typography>
-            <Typography variant="body2"> {`${stats?.kills?.shipKills || 0} Ship Kills`} </Typography>
-          </div>
-          <div>
-            <Typography variant="body2"> {`${stats?.kills?.podKills || 0} Pod Kills`} </Typography>
-            <Typography variant="body2"> {`${stats?.kills?.npcKills || 0} NPC Kills`} </Typography>
-          </div>
-        </div>
+        <ResponsiveContainer width={352} height={125} >
+          <LineChart className="kills-chart"  data={data}>
+            <Tooltip content={<ChartTooltip />}/>
+
+            <Line type="monotone" dataKey="jumps" stroke="#3a80ff" dot={null} />
+            <Line type="monotone" dataKey="npc_kills" stroke="#06e221" dot={null} />
+            <Line type="monotone" dataKey="pod_kills" stroke="#ff4c17" dot={null} />
+            <Line type="monotone" dataKey="ship_kills" stroke="#ffb80d" dot={null} />
+          </LineChart>
+        </ResponsiveContainer>
       </div>
     </Fragment>
   );

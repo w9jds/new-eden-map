@@ -23,6 +23,9 @@ const navigationSlice = createSlice({
     setRoute: (state, action: PayloadAction<number[]>) => {
       state.route = action.payload;
     },
+    setFlag: (state, action: PayloadAction<'shortest' | 'secure' | 'known'>) => {
+      state.flag = action.payload;
+    },
     toggleNav: (state, action: PayloadAction<boolean>) => {
       if (action.payload === false) {
         state.start = undefined;
@@ -35,6 +38,6 @@ const navigationSlice = createSlice({
   }
 })
 
-export const { setDestination, setOrigin, setRoute, toggleNav } = navigationSlice.actions;
+export const { setDestination, setOrigin, setFlag, setRoute, toggleNav } = navigationSlice.actions;
 
 export default navigationSlice;

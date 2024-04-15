@@ -13,9 +13,16 @@
     flex-direction: column;
     height: 48px;
 
+    .types {
+      margin-top: 4px;
+      justify-content: center;
+    }
+
     .close-navigation {
+      position: absolute;
+      right: 0;
+
       min-width: 48px;
-      align-self: flex-end;
       border-radius: 0;
 
       svg {

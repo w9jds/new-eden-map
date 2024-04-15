@@ -22,7 +22,7 @@ const killSlice = createSlice({
 
     registerFeed: () => {}
   }
-})
+});
 
 export const { registerFeed, addKill, removeKill } = killSlice.actions;
 

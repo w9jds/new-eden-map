@@ -4,6 +4,7 @@ import { useFrame } from '@react-three/fiber'
 
 import { systemDetails } from 'constants/systems';
 import { getRoute } from 'store/navigation/selectors';
+import { BufferGeometry } from 'three';
 
 type Props = {
   connections: Record<number, number[]>;
@@ -11,23 +12,28 @@ type Props = {
 
 const Connections = ({ connections }: Props) => {
   const route = useSelector(getRoute);
-  const routeRef = useRef();
+  const routeRef = useRef<BufferGeometry>();
 
   const { vertexs } = useMemo(() => {
-    const positions = [];
+    const positions = new Array(700);
 
+    let index = 0;
     for (let systemId of route) {
       const details = systemDetails[systemId];
 
       if (details) {
         const { position } = details;
 
-        positions.push(
-          +position[0] / 1000000000000000,
-          +position[1] / 1000000000000000,
-          +position[2] / 1000000000000000,
-        );
+        positions[index] = +position[0] / 1000000000000000;
+        positions[index+1] = +position[1] / 1000000000000000;
+        positions[index+2] = +position[2] / 1000000000000000;
+
+        index += 3;
       }
+    }
+
+    if (routeRef.current) {
+      routeRef.current.attributes.position.needsUpdate = true;
     }
 
     return {
@@ -78,8 +84,8 @@ const Connections = ({ connections }: Props) => {
     <Fragment>
       {
         vertexs.length > 0 && (
-          <line ref={routeRef}>
-            <bufferGeometry>
+          <line>
+            <bufferGeometry ref={routeRef}>
               <bufferAttribute attach="attributes-position" count={route.length} array={vertexs} itemSize={3} />
             </bufferGeometry>
             <lineBasicMaterial

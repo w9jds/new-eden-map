@@ -1,9 +1,9 @@
 import { all, fork, select, takeEvery } from 'redux-saga/effects';
 import { Database, ref } from 'firebase/database';
 
-import { Payload, sync } from 'store/firebase';
+import { sync } from 'store/firebase';
 import { getFbDatabase } from 'store/current/selectors';
-import { addKill, removeKill, registerFeed } from './reducer';
+import { addKill, registerFeed } from './reducer';
 
 function* registerKillFeed() {
   const database: Database = yield select(getFbDatabase);

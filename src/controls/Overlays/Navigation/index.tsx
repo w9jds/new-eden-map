@@ -1,15 +1,15 @@
 import React, { FC, Fragment, useMemo, useState } from 'react';
-import { connect, useDispatch } from 'react-redux';
+import { connect, useDispatch, useSelector } from 'react-redux';
 
 import { Close } from '@mui/icons-material';
-import { Button, Divider, Paper, TextField, Typography } from '@mui/material';
+import { Button, ButtonGroup, Divider, Paper, TextField, Typography } from '@mui/material';
 import SystemTile from 'controls/SystemTile';
 
 import { System } from 'models/universe';
 import { ApplicationState } from 'models/states';
 import { systemDetails, systems } from 'constants/systems';
-import { setDestination, setOrigin, toggleNav } from 'store/navigation/reducer';
-import { getDestination, getOrigin, getRoute, isNavOpen } from 'store/navigation/selectors';
+import { setDestination, setFlag, setOrigin, toggleNav } from 'store/navigation/reducer';
+import { getDestination, getFlag, getOrigin, getRoute, isNavOpen } from 'store/navigation/selectors';
 
 import './index.scss';
 
@@ -23,6 +23,7 @@ const NavigationOverlay: FC<Props> = ({
   destinationId,
 }) => {
   const dispatch = useDispatch();
+  const flag = useSelector(getFlag);
 
   const [focus, setFocus] = useState('');
   const [query, setQuery] = useState('');
@@ -96,9 +97,22 @@ const NavigationOverlay: FC<Props> = ({
     dispatch(toggleNav(false));
   }
 
+  const updateRouting = (type: "shortest" | "secure" | "known") => () => {
+    dispatch(setFlag(type))
+  }
+
   return isOpen && (
     <Paper className="navigation-overlay">
       <div className="actions">
+        <ButtonGroup className="types" size="small">
+          <Button variant={flag === 'shortest' ? 'contained' : 'outlined'} onClick={updateRouting('shortest')}>
+            Shortest
+          </Button>
+          <Button variant={flag === 'secure' ? 'contained' : 'outlined'} onClick={updateRouting('secure')}>
+            Secure
+          </Button>
+        </ButtonGroup>
+
         <Button className="close-navigation" variant="text" onClick={onClose}>
           <Close />
         </Button>

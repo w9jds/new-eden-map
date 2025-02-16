@@ -6,7 +6,7 @@ import { setRoute } from "./reducer";
 
 startListening({
   predicate: (action, currentState: ApplicationState, previousState: ApplicationState) => {
-    if (getFlag(currentState) !== getFlag(previousState)) {
+    if (getFlag(currentState) !== getFlag(previousState) && getOrigin(currentState) && getDestination(currentState)) {
       return true;
     }
 

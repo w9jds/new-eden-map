@@ -20,7 +20,7 @@ export type NavigationState = {
   readonly open: boolean;
   readonly start: number;
   readonly end: number;
-  readonly flag: 'shortest' | 'secure' | 'known';
+  readonly flag: 'shortest' | 'secure' | 'less-safe';
 
   readonly route: number[];
 }

@@ -1,9 +1,8 @@
 @import "../../../stylesheets/placeholders.scss";
 
 .navigation-overlay {
-  border-radius: 0 0 24px 24px !important;
-
   position: absolute;
+  border-radius: 0 0 24px 24px !important;
   background-color: #222 !important;
   width: 400px;
   top: 0px;

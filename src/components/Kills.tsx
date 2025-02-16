@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unknown-property */
 import React, { Fragment, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { Mesh, ShaderMaterial, Vector2 } from 'three';
@@ -72,7 +73,7 @@ const Pulses = () => {
     const material = meshRef.current.material as ShaderMaterial;
 
     if (material && active) {
-      material.uniforms.u_time.value += state.clock.getDelta();
+      material.uniforms.u_time.value += delta;
     }
   })
 

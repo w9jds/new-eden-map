@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unknown-property */
 import React, { Fragment, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux';
 import { useFrame } from '@react-three/fiber'
@@ -45,10 +46,10 @@ const Connections = ({ connections }: Props) => {
     const positions = [];
 
     let index = 0;
-    for (let systemId in connections) {
+    for (const systemId in connections) {
       const from = systemDetails[systemId];
 
-      for (let destinationId of connections[systemId]) {
+      for (const destinationId of connections[systemId]) {
         const to = systemDetails[destinationId];
 
         positions.push(

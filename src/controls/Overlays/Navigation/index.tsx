@@ -97,7 +97,7 @@ const NavigationOverlay: FC<Props> = ({
     dispatch(toggleNav(false));
   }
 
-  const updateRouting = (type: "shortest" | "secure" | "known") => () => {
+  const updateRouting = (type: 'shortest' | 'secure' | 'less-safe') => () => {
     dispatch(setFlag(type))
   }
 
@@ -110,6 +110,9 @@ const NavigationOverlay: FC<Props> = ({
           </Button>
           <Button variant={flag === 'secure' ? 'contained' : 'outlined'} onClick={updateRouting('secure')}>
             Secure
+          </Button>
+          <Button variant={flag === 'less-safe' ? 'contained' : 'outlined'} onClick={updateRouting('less-safe')}>
+            Less Secure
           </Button>
         </ButtonGroup>
 

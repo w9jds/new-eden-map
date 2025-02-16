@@ -28,7 +28,7 @@ export const systemIds: number[] = systems.map(
 export const regions = () => {
   const out: Record<number, number[]> = {};
 
-  for (let system of systems) {
+  for (const system of systems) {
     if (!out[system.regionID]) {
       out[system.regionID] = [ system.solarSystemID ];
     }
@@ -37,4 +37,28 @@ export const regions = () => {
   }
 
   return out;
+}
+
+export const center = () => {
+  const sum = [0, 0, 0];
+  // const min = [0, 0, 0];
+  // const max = [0, 0, 0];
+
+  for (const system of systems) {
+    for (let i = 0; i < 3; i++) {
+      sum[i] += +system.position[i]
+      // if (+system.position[i] < +min[i]) {
+      //   min[i] = +system.position[i];
+      // }
+      // if (+system.position[i] > +max[i]) {
+      //   max[i] = +system.position[i];
+      // }
+    }
+  }
+
+  return [
+    sum[0] / systems.length,
+    sum[1] / systems.length,
+    sum[2] / systems.length,
+  ];
 }

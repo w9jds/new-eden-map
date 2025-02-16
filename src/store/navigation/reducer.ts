@@ -23,7 +23,7 @@ const navigationSlice = createSlice({
     setRoute: (state, action: PayloadAction<number[]>) => {
       state.route = action.payload;
     },
-    setFlag: (state, action: PayloadAction<'shortest' | 'secure' | 'known'>) => {
+    setFlag: (state, action: PayloadAction<'shortest' | 'secure' | 'less-safe'>) => {
       state.flag = action.payload;
     },
     toggleNav: (state, action: PayloadAction<boolean>) => {

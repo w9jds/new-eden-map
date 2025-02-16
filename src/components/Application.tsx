@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect, Suspense } from 'react';
+import React, { Fragment, useState, useEffect, useRef, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { initializeApp } from 'firebase/app';
 
@@ -8,7 +8,7 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 import { FirebaseConfig } from 'config';
-import { systems } from 'constants/systems';
+import { center, systems } from 'constants/systems';
 import { getCurrentSystem } from 'store/current/selectors';
 import { setFirebaseApp } from 'store/current/reducer';
 import { registerFeed } from 'store/kills/reducer';
@@ -18,19 +18,32 @@ import SystemOverlay from 'controls/Overlays/System';
 import SearchOverlay from 'controls/Overlays/Search';
 import NavigationOverlay from 'controls/Overlays/Navigation';
 import KillFeed from 'controls/Overlays/KillFeed';
+import { System } from 'models/universe';
 
 import './Application.scss';
 
 const Camera = () => {
+  const prev = useRef<System>();
+
   const { camera, gl } = useThree();
   const [controls, setControls] = useState<OrbitControls>();
   const current = useSelector(getCurrentSystem);
+  const [x, y, z] = useMemo(() => center(), []);
 
   useEffect(() => {
-    camera.position.set(187.41718439748556, 492.2187090727254, -250.123415836688);
-    camera.rotation.set(-1.9050773839836128, 0.445220982640734, 2.249474219409512);
+    const orbitControls = new OrbitControls(camera, gl.domElement);
 
-    setControls(new OrbitControls(camera, gl.domElement));
+    orbitControls.target.set(0,0,0);
+
+    orbitControls.enablePan = false;
+    orbitControls.enableDamping = true;
+
+    orbitControls.minTargetRadius = 5;
+    orbitControls.maxDistance = 800;
+
+    orbitControls.maxPolarAngle = Math.PI / 2;
+
+    setControls(orbitControls);
   }, []);
 
   useEffect(() => {
@@ -41,26 +54,39 @@ const Camera = () => {
         current.position[2] / 1000000000000000
       );
 
-
       gsap.to(controls.target, {
         duration: 2,
         x: to.x,
         y: to.y,
         z: to.z,
-        onUpdate: () => {
-          controls.update();
+        // onUpdate: () => {
+        //   controls.update();
 
-          // const distance = camera.position.distanceTo(to);
-          // console.log(distance);
-        }
+        //   // const distance = camera.position.distanceTo(to);
+        //   // console.log(distance);
+        // }
       });
 
       // camera.updateMatrixWorld();
     }
+    if (prev.current && !current) {
+      gsap.to(controls.target, {
+        duration: 2,
+        x: 0,
+        y: 0,
+        z: 0
+      })
+    }
+
+    prev.current = current;
   }, [current]);
 
   useFrame(() => {
-
+    if (controls) {
+      controls.update();
+      // console.log(`target: ${controls.target}`);
+      console.log(`distance: ${controls.getDistance()}`)
+    }
   })
 
   return null;

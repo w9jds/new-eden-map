@@ -1,7 +1,7 @@
 export enum WarfareSystemStatus {
-  Captured = 'captured', 
-  Contested = 'contested', 
-  Uncontested = 'uncontested', 
+  Captured = 'captured',
+  Contested = 'contested',
+  Uncontested = 'uncontested',
   Vulnerable = 'vulnerable'
 }
 
@@ -11,7 +11,7 @@ export type System = {
   luminosity: number;
   radius: number;
   security: number;
-  position: number[];
+  position: [number, number, number];
   constellationName: string;
   constellationID: number;
   regionName: string;

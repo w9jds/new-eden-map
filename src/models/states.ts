@@ -11,8 +11,9 @@ export type ApplicationState = {
 
 export type CurrentState = {
   readonly firebase: FirebaseApp;
-  
+
   readonly system: System;
+  readonly universe: Record<number, System>;
   readonly statistics: SystemStatistics;
 }
 

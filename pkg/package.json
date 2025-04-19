@@ -1,19 +1,18 @@
 {
   "name": "eve-routes",
+  "type": "module",
   "collaborators": [
     "Jeremy Shore"
   ],
-  "version": "0.1.1",
+  "version": "0.1.3",
   "files": [
     "eve_routes_bg.wasm",
     "eve_routes.js",
-    "eve_routes_bg.js",
     "eve_routes.d.ts"
   ],
-  "module": "eve_routes.js",
+  "main": "eve_routes.js",
   "types": "eve_routes.d.ts",
   "sideEffects": [
-    "./eve_routes.js",
     "./snippets/*"
   ]
 }

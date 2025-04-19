@@ -1,16 +1,17 @@
 /* eslint-disable react/no-unknown-property */
 import React, { FC, Fragment, useMemo, useState, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { BufferGeometry, Color, MathUtils, Points, TextureLoader, ShaderMaterial } from 'three';
-import { useFrame } from '@react-three/fiber';
+import { BufferGeometry, Color, MathUtils, Points, TextureLoader } from 'three';
+import { ThreeEvent, useFrame, useThree } from '@react-three/fiber';
 
-import { systemDetails } from 'constants/systems';
+import { getCurrentSystem, getUniverse } from 'store/current/selectors';
+import { setSystem } from 'store/current/reducer';
 import glow from 'textures/glow_texture.png';
-import { getCurrentSystem } from 'store/current/selectors';
+import { getRoute } from 'store/navigation/selectors';
 
 type Props = {
-  ids: number[];
+  ids?: number[] | string[];
 }
 
 const STAR_VERTEX = `
@@ -39,34 +40,14 @@ const STAR_FRAGMENT = `
   varying float vAlpha;
 
   void main() {
+    if (color.r == 0.0 && color.g == 0.0 && color.b == 0.0) {
+      discard;
+    }
+
     gl_FragColor = vec4(color * vColor, vAlpha);
     gl_FragColor = gl_FragColor * texture2D( pointTexture, gl_PointCoord );
   }
 `
-
-// const VERTEX_SHADER = `
-//   attribute float size;
-//   attribute vec3 flareColor;
-//   varying vec3 vColor;
-
-//   void main() {
-//     vColor = flareColor;
-//     vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-//     gl_PointSize = size * (300.0 / -mvPosition.z);
-//     gl_Position = projectionMatrix * mvPosition;
-//   }
-// `
-
-// const FRAGMENT_SHADER = `
-//   uniform vec3 color;
-//   uniform sampler2D pointTexture;
-//   varying vec3 vColor;
-
-//   void main() {
-//     gl_FragColor = vec4(color * vColor, 1.0);
-//     gl_FragColor = gl_FragColor * texture2D( pointTexture, gl_PointCoord );
-//   }
-// `
 
 const twinkleSpeed = 0.85;
 const clockWarparound = 60 * 60 * 1000;
@@ -79,74 +60,94 @@ const uniforms = {
 }
 
 const Stars: FC<Props> = ({ ids }) => {
-  const starRef = useRef<Points>();
+  const dispatch = useDispatch();
+  const starRef = useRef<Points>(undefined);
   const clockTime = useRef(0);
 
-  const [ hovered, setHover ] = useState(false);
+  const details = useSelector(getUniverse);
   const system = useSelector(getCurrentSystem);
+  const route = useSelector(getRoute);
+
+  const { camera, raycaster, pointer } = useThree();
+  const [ starIndex, setHoveredStar ] = useState(undefined);
+
+  const onStarClick = (e: ThreeEvent<MouseEvent>) => {
+    dispatch(setSystem(details[+ids[e.index]]));
+  }
 
   const { positions, radii, colors, alpha } = useMemo(() => {
-    const positions = [], radii = [], systemIds = [];
+    const positions = [], radii = [], systemIds = [], alphas = [];
 
-    for (let i = 0; i < ids.length; i++) {
-      const  { solarSystemID, radius, position } = systemDetails[ids[i]];
+    for (const systemId of ids) {
+      const  { solarSystemID, radius, position } = details[+systemId];
 
+      alphas.push(1.0);
+      radii.push(2.5 * (radius));
+      positions.push(...position);
       systemIds.push(solarSystemID);
-      radii.push(2.0 * (radius / 1000000000000));
-      positions.push(
-        position[0] / 1000000000000000,
-        position[1] / 1000000000000000,
-        position[2] / 1000000000000000
-      );
     }
 
     return {
       systemIds,
       radii: new Float32Array(radii),
+      alpha: new Float32Array(alphas),
       positions: new Float32Array(positions),
       colors: new Float32Array(ids.length * 3),
-      alpha: new Float32Array(ids.length),
     }
   }, [ids]);
+
+  const updateStarGeometry = () => {
+    const geometry = starRef.current.geometry as BufferGeometry;
+
+    for (let i = 0; i < ids.length; i++) {
+      const  { security } = details[+ids[i]];
+
+      const twikleScale = MathUtils.clamp(
+        -1 + Math.sin((clockTime.current + i) * twinkleSpeed) * 2, 0, 1
+      );
+
+      new Color('#a1a1a1')
+        .lerp(new Color('#39b4f1'), security)
+        .addScalar(twikleScale)
+        .toArray(colors, i * 3);
+
+      if (route?.length) {
+        alpha[i] = route.includes(+ids[i]) ? 1.0 : 0.2;
+      } else if (system) {
+        alpha[i] = +ids[i] == system.solarSystemID ? 1.0 : 0.2;
+      } else {
+        alpha[i] = 1.0;
+      }
+    }
+
+    geometry.attributes.alpha.needsUpdate = true;
+    geometry.attributes.flareColor.needsUpdate = true;
+    geometry.computeBoundingSphere();
+  };
+
+  const findPointerIntersects = () => {
+    raycaster.setFromCamera(pointer, camera);
+    const intersects = raycaster.intersectObject(starRef.current);
+    if (intersects.length > 0) {
+      const index = intersects[0].index;
+      setHoveredStar(index);
+    } else {
+      setHoveredStar(undefined);
+    }
+  };
 
   useFrame((state, delta) => {
     clockTime.current = (clockTime.current + delta) % clockWarparound;
 
     if (starRef.current) {
-      const geometry = starRef.current.geometry as BufferGeometry;
-      // const material = starRef.current.material as ShaderMaterial;
-
-      for (let i = 0; i < ids.length; i++) {
-        const  { security } = systemDetails[ids[i]];
-
-        const twikleScale = MathUtils.clamp(
-          -1 + Math.sin((clockTime.current + i) * twinkleSpeed) * 2, 0, 1
-        );
-
-        new Color('#a1a1a1')
-          .lerp(new Color('#39b4f1'), security)
-          .addScalar(twikleScale)
-          .toArray(colors, i * 3);
-
-        alpha[i] = !system ? 1.0 : ids[i] == system.solarSystemID ? 1.0 : 0.1;
-      }
-
-      geometry.attributes.alpha.needsUpdate = true;
-      geometry.attributes.flareColor.needsUpdate = true;
+      updateStarGeometry();
+      findPointerIntersects();
     }
-  })
-
-  const onRegionEnter = () => {
-    setHover(true);
-  }
-
-  const onRegionLeave = () => {
-    setHover(false);
-  }
+  });
 
   return ids && (
     <Fragment>
-      <points ref={starRef} onPointerEnter={onRegionEnter} onPointerLeave={onRegionLeave}>
+      <points ref={starRef} onClick={onStarClick}>
         <sphereGeometry attach="geometry">
           <bufferAttribute attach="attributes-size" count={ids.length} array={radii} itemSize={1} />
           <bufferAttribute attach="attributes-alpha" count={ids.length} array={alpha} itemSize={1} />
@@ -156,7 +157,6 @@ const Stars: FC<Props> = ({ ids }) => {
         <shaderMaterial
           transparent
           uniforms={uniforms}
-          depthFunc={1}
           vertexShader={STAR_VERTEX}
           fragmentShader={STAR_FRAGMENT}
         />

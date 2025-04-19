@@ -3,11 +3,13 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 import { System, SystemStatistics } from 'models/universe';
 import { CurrentState } from 'models/states';
+import { systemDetails } from 'constants/systems';
 
 const initialState: CurrentState = {
   firebase: undefined,
 
   system: undefined,
+  universe: systemDetails,
   statistics: undefined,
 };
 
@@ -23,7 +25,7 @@ const currentSlice = createSlice({
       if (!action.payload) {
         state.statistics = undefined;
       }
-      
+
       state.system = action.payload;
     },
     setStatistics: (state, action: PayloadAction<SystemStatistics>) => {

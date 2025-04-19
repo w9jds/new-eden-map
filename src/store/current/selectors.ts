@@ -8,6 +8,8 @@ export const getFirebaseApp = (state: ApplicationState) => state.current.firebas
 
 export const getCurrentSystem = (state: ApplicationState) => state.current.system;
 
+export const getUniverse = (state: ApplicationState) => state.current.universe;
+
 export const getStatistics = (state: ApplicationState) => state.current.statistics;
 
 export const getStatisticData = createSelector(

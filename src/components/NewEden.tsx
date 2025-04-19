@@ -1,23 +1,27 @@
 import React, { FC, Fragment, useMemo } from 'react';
 
+import Regions from './Regions';
 import Stargates from './Connections';
-import Kills from './Kills';
+import { useCamera } from './Camera';
+import { useKillPulses } from './Kills';
 
 import { System } from 'models/universe';
-import Regions from './Regions';
 
 type Props = {
   systems: System[];
 }
 
 const NewEden: FC<Props> = ({ systems }) => {
+  useKillPulses();
+  useCamera();
+
   const connections = useMemo(() => {
     const segments = {};
 
     for (const system of systems) {
       if (system.neighbors) {
         for (const destination of system.neighbors) {
-          if (!segments[destination] || segments[destination].indexOf(system.solarSystemID) == -1) {
+          if (!segments[destination] || !segments[destination].includes(system.solarSystemID)) {
             if (!segments[system.solarSystemID]) {
               segments[system.solarSystemID] = [destination];
             } else {
@@ -33,7 +37,6 @@ const NewEden: FC<Props> = ({ systems }) => {
 
   return (
     <Fragment>
-      <Kills />
       <Regions />
       <Stargates connections={connections} />
     </Fragment>

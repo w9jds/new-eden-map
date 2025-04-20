@@ -54,8 +54,7 @@ const STAR_FRAGMENT = `
 `
 
 enum Radius {
-  BASE = 9,
-  SELECTED = 11,
+  FOCUSED = 9,
   BACKGROUND = 4,
 };
 
@@ -96,7 +95,7 @@ const Stars: FC<Props> = ({ ids }) => {
     for (const systemId of ids) {
       const  { solarSystemID, position } = details[+systemId];
 
-      radii.push(Radius.BASE);
+      radii.push(Radius.FOCUSED);
       alphas.push(Alpha.FOCUSED);
       positions.push(...position);
       systemIds.push(solarSystemID);
@@ -116,7 +115,7 @@ const Stars: FC<Props> = ({ ids }) => {
     const securityColor = SecurityColors[+security.toFixed(1)];
 
     if (!route?.length && !system) {
-      radii[index] = Radius.BASE;
+      radii[index] = Radius.FOCUSED;
       alpha[index] = Alpha.FOCUSED;
 
       const twikleScale = MathUtils.clamp(
@@ -134,7 +133,7 @@ const Stars: FC<Props> = ({ ids }) => {
     if (route?.length) {
       if (route.includes(solarSystemID)) {
         new Color(securityColor).toArray(colors, index * 3);
-        radii[index] = Radius.SELECTED;
+        radii[index] = Radius.FOCUSED;
         alpha[index] = Alpha.FOCUSED;
         return;
       }
@@ -142,7 +141,7 @@ const Stars: FC<Props> = ({ ids }) => {
 
     if (system && system.solarSystemID == solarSystemID) {
       new Color(securityColor).toArray(colors, index * 3);
-      radii[index] = Radius.SELECTED;
+      radii[index] = Radius.FOCUSED;
       alpha[index] = Alpha.FOCUSED;
       return;
     }

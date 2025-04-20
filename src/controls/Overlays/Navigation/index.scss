@@ -10,10 +10,10 @@
   .actions {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     height: 48px;
 
     .types {
-      margin-top: 4px;
       justify-content: center;
     }
 
@@ -23,6 +23,7 @@
 
       min-width: 48px;
       border-radius: 0;
+      padding: 0;
 
       svg {
         fill: white;

@@ -1,55 +1,43 @@
 /* eslint-disable react/no-unknown-property */
-import React, { Fragment, useMemo, useRef } from 'react'
+import React, { FC, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
-import { systemDetails } from 'constants/systems';
-import { getRoute } from 'store/navigation/selectors';
-import { BufferGeometry } from 'three';
+import { getUniverse } from 'store/current/selectors';
 
-type Props = {
-  connections: Record<number, number[]>;
-}
+const Connections: FC = () => {
+  const details = useSelector(getUniverse);
 
-const Connections = ({ connections }: Props) => {
-  const route = useSelector(getRoute);
-  const routeRef = useRef<BufferGeometry>(undefined);
+  const connections = useMemo(() => {
+    const segments = {};
 
-  const { vertexs } = useMemo(() => {
-    const positions = new Array(700);
+    for (const id in details) {
+      const system = details[id];
 
-    let index = 0;
-    for (const systemId of route) {
-      const details = systemDetails[systemId];
-
-      if (details) {
-        const { position } = details;
-
-        positions[index] = +position[0];
-        positions[index+1] = +position[1];
-        positions[index+2] = +position[2];
-
-        index += 3;
+      if (system.neighbors) {
+        for (const destination of system.neighbors) {
+          if (!segments[destination] || !segments[destination].includes(system.solarSystemID)) {
+            if (!segments[system.solarSystemID]) {
+              segments[system.solarSystemID] = [destination];
+            } else {
+              segments[system.solarSystemID].push(destination);
+            }
+          }
+        }
       }
     }
 
-    if (routeRef.current) {
-      routeRef.current.attributes.position.needsUpdate = true;
-    }
-
-    return {
-      vertexs: new Float32Array(positions),
-    }
-  }, [route]);
+    return segments;
+  }, [details]);
 
   const { positions, stroke, count } = useMemo(() => {
     const positions = [];
 
     let index = 0;
     for (const systemId in connections) {
-      const from = systemDetails[systemId];
+      const from = details[systemId];
 
       for (const destinationId of connections[systemId]) {
-        const to = systemDetails[destinationId];
+        const to = details[destinationId];
 
         positions.push(...from.position);
         index++;
@@ -66,25 +54,13 @@ const Connections = ({ connections }: Props) => {
   }, [connections]);
 
   return (
-    <Fragment>
-      {
-        vertexs.length > 0 && (
-          <line>
-            <lineBasicMaterial opacity={1} transparent={false}/>
-            <bufferGeometry ref={routeRef}>
-              <bufferAttribute attach="attributes-position" count={route.length} array={vertexs} itemSize={3} />
-            </bufferGeometry>
-          </line>
-        )
-      }
-      <lineSegments>
-        <lineBasicMaterial transparent opacity={0.2}/>
-        <bufferGeometry>
-          <bufferAttribute attach="attributes-lineSize" count={count} array={stroke} itemSize={1} />
-          <bufferAttribute attach="attributes-position" count={count} array={positions} itemSize={3} />
-        </bufferGeometry>
-      </lineSegments>
-    </Fragment>
+    <lineSegments>
+      <lineBasicMaterial transparent opacity={0.13}/>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-lineSize" count={count} array={stroke} itemSize={1} />
+        <bufferAttribute attach="attributes-position" count={count} array={positions} itemSize={3} />
+      </bufferGeometry>
+    </lineSegments>
   );
 }
 

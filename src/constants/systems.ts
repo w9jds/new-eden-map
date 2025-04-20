@@ -5,6 +5,20 @@ type SearchItem = {
   id: number
 }
 
+export const SecurityColors = {
+  1: '#2e74df',
+  0.9: '#379cf6',
+  0.8: '#4acef5',
+  0.7: '#5cdca6',
+  0.6: '#70e452',
+  0.5: '#f1fe83',
+  0.4: '#e0690e',
+  0.3: '#ce450b',
+  0.2: '#bc1112',
+  0.1: '#6c2222',
+  0: '#903066',
+};
+
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 export const systems: System[] = require('./systems.json');
 
@@ -19,7 +33,7 @@ export const systemDetails: Record<number, System> = systems.reduce(
   (out, current) => {
     out[current.solarSystemID] = {
       ...current,
-      radius: current.radius / 1000000000000,
+      radius: current.radius / 1000500000000,
       position: [
         current.position[0] / 1000000000000000,
         current.position[1] / 1000000000000000,

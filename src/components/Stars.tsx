@@ -1,14 +1,16 @@
 /* eslint-disable react/no-unknown-property */
+import { SecurityColors } from 'constants/systems';
+
 import React, { FC, Fragment, useMemo, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { BufferGeometry, Color, MathUtils, Points, TextureLoader } from 'three';
+import { BufferGeometry, Color, MathUtils,  Points, TextureLoader } from 'three';
 import { ThreeEvent, useFrame, useThree } from '@react-three/fiber';
 
 import { getCurrentSystem, getUniverse } from 'store/current/selectors';
 import { setSystem } from 'store/current/reducer';
-import glow from 'textures/glow_texture.png';
 import { getRoute } from 'store/navigation/selectors';
+import sphere from 'textures/sphere.png';
 
 type Props = {
   ids?: number[] | string[];
@@ -33,30 +35,43 @@ const STAR_VERTEX = `
 `
 
 const STAR_FRAGMENT = `
-  uniform vec3 color;
-  uniform sampler2D pointTexture;
+  uniform vec3 u_color;
+  uniform sampler2D u_texture;
 
   varying vec3 vColor;
   varying float vAlpha;
 
   void main() {
-    if (color.r == 0.0 && color.g == 0.0 && color.b == 0.0) {
+    gl_FragColor = vec4(u_color * vColor, vAlpha);
+    gl_FragColor = gl_FragColor * texture2D(u_texture, gl_PointCoord);
+
+    float colorLength = length(gl_FragColor.rgb);
+
+    if (colorLength < 0.1 || gl_FragColor.a < 0.1) {
       discard;
     }
-
-    gl_FragColor = vec4(color * vColor, vAlpha);
-    gl_FragColor = gl_FragColor * texture2D( pointTexture, gl_PointCoord );
   }
 `
+
+enum Radius {
+  BASE = 9,
+  SELECTED = 11,
+  BACKGROUND = 4,
+};
+
+enum Alpha {
+  FOCUSED = 1.0,
+  BACKGROUND = 0.2,
+};
 
 const twinkleSpeed = 0.85;
 const clockWarparound = 60 * 60 * 1000;
 
-const flareTexture = new TextureLoader().load(glow)
+const sphereTexture = new TextureLoader().load(sphere)
 
 const uniforms = {
-  color: { value: new Color() },
-  pointTexture: { value: flareTexture }
+  u_color: { value: new Color() },
+  u_texture: { value: sphereTexture }
 }
 
 const Stars: FC<Props> = ({ ids }) => {
@@ -79,10 +94,10 @@ const Stars: FC<Props> = ({ ids }) => {
     const positions = [], radii = [], systemIds = [], alphas = [];
 
     for (const systemId of ids) {
-      const  { solarSystemID, radius, position } = details[+systemId];
+      const  { solarSystemID, position } = details[+systemId];
 
-      alphas.push(1.0);
-      radii.push(2.5 * (radius));
+      radii.push(Radius.BASE);
+      alphas.push(Alpha.FOCUSED);
       positions.push(...position);
       systemIds.push(solarSystemID);
     }
@@ -96,30 +111,55 @@ const Stars: FC<Props> = ({ ids }) => {
     }
   }, [ids]);
 
-  const updateStarGeometry = () => {
-    const geometry = starRef.current.geometry as BufferGeometry;
+  const getColor = (index: number) => {
+    const { solarSystemID, security, regionID } = details[+ids[index]];
+    const securityColor = SecurityColors[+security.toFixed(1)];
 
-    for (let i = 0; i < ids.length; i++) {
-      const  { security } = details[+ids[i]];
+    if (!route?.length && !system) {
+      radii[index] = Radius.BASE;
+      alpha[index] = Alpha.FOCUSED;
 
       const twikleScale = MathUtils.clamp(
-        -1 + Math.sin((clockTime.current + i) * twinkleSpeed) * 2, 0, 1
+        -1 + Math.sin((clockTime.current + index) * twinkleSpeed) * 2, 0, 1
       );
 
       new Color('#a1a1a1')
         .lerp(new Color('#39b4f1'), security)
         .addScalar(twikleScale)
-        .toArray(colors, i * 3);
+        .toArray(colors, index * 3);
 
-      if (route?.length) {
-        alpha[i] = route.includes(+ids[i]) ? 1.0 : 0.2;
-      } else if (system) {
-        alpha[i] = +ids[i] == system.solarSystemID ? 1.0 : 0.2;
-      } else {
-        alpha[i] = 1.0;
+      return;
+    }
+
+    if (route?.length) {
+      if (route.includes(solarSystemID)) {
+        new Color(securityColor).toArray(colors, index * 3);
+        radii[index] = Radius.SELECTED;
+        alpha[index] = Alpha.FOCUSED;
+        return;
       }
     }
 
+    if (system && system.solarSystemID == solarSystemID) {
+      new Color(securityColor).toArray(colors, index * 3);
+      radii[index] = Radius.SELECTED;
+      alpha[index] = Alpha.FOCUSED;
+      return;
+    }
+
+    new Color('#a1a1a1').toArray(colors, index * 3);
+    radii[index] = Radius.BACKGROUND;
+    alpha[index] = Alpha.BACKGROUND;
+  }
+
+  const updateStarGeometry = () => {
+    const geometry = starRef.current.geometry as BufferGeometry;
+
+    for (let i = 0; i < ids.length; i++) {
+      getColor(i);
+    }
+
+    geometry.attributes.size.needsUpdate = true;
     geometry.attributes.alpha.needsUpdate = true;
     geometry.attributes.flareColor.needsUpdate = true;
     geometry.computeBoundingSphere();

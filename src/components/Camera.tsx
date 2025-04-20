@@ -98,14 +98,11 @@ export const useCamera = () => {
         duration: 3,
         ease: "power2.inOut",
         onUpdate: function() {
-          console.log('onUpdate', tweenTarget.t);
           controls.current.target.lerpVectors(startTarget, endTarget, tweenTarget.t);
           // camera.position.lerpVectors(startPosition, endPosition, tweenTarget.t);
-
           controls.current.update();
         },
         onComplete: function() {
-          console.log('onComplete', tweenTarget.t);
           controls.current.target.copy(endTarget);
           // camera.position.copy(endPosition);
           controls.current.update();
@@ -134,8 +131,8 @@ export const useCamera = () => {
           controls.current.target.copy(endTarget);
           camera.position.copy(endPosition);
 
-          camera.updateProjectionMatrix();
           controls.current.update();
+          camera.updateProjectionMatrix();
           tween.current = null;
         }
       });

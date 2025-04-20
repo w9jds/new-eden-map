@@ -6,7 +6,6 @@ import { initializeApp } from 'firebase/app';
 import { Canvas } from '@react-three/fiber';
 
 import { FirebaseConfig } from 'config';
-import { systems } from 'constants/systems';
 import { setFirebaseApp } from 'store/current/reducer';
 import { registerFeed } from 'store/kills/reducer';
 
@@ -41,7 +40,7 @@ const Application = () => {
         camera={{ up: [0, -1, 0], castShadow: false }}
         gl={{ antialias: true, pixelRatio: window.devicePixelRatio, alpha: true }}
       >
-        <NewEden systems={systems} />
+        <NewEden />
       </Canvas>
 
       <SystemOverlay />

@@ -6,17 +6,17 @@ type SearchItem = {
 }
 
 export const SecurityColors = {
-  1: '#2e74df',
-  0.9: '#379cf6',
-  0.8: '#4acef5',
-  0.7: '#5cdca6',
-  0.6: '#70e452',
-  0.5: '#f1fe83',
-  0.4: '#e0690e',
-  0.3: '#ce450b',
-  0.2: '#bc1112',
-  0.1: '#6c2222',
-  0: '#903066',
+  1: '#2c74e0',
+  0.9: '#3999e9',
+  0.8: '#4dccf6',
+  0.7: '#60d9a3',
+  0.6: '#71e554',
+  0.5: '#f3fd82',
+  0.4: '#da6c07',
+  0.3: '#cc440f',
+  0.2: '#ba1117',
+  0.1: '#732020',
+  0: '#8c3263',
 };
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -60,55 +60,4 @@ export const regions = () => {
   }
 
   return out;
-}
-
-
-export const mapDimensions = () => {
-  if (!systems || systems.length === 0) {
-    return null; // Or return a default box
-  }
-
-  const min = [Infinity, Infinity, Infinity];
-  const max = [-Infinity, -Infinity, -Infinity];
-
-  for (const system of systems) {
-    const [x, y, z] = system.position;
-
-    min[0] = Math.min(min[0], x);
-    min[1] = Math.min(min[1], y);
-    min[2] = Math.min(min[2], z);
-
-    max[0] = Math.max(max[0], x);
-    max[1] = Math.max(max[1], y);
-    max[2] = Math.max(max[2], z);
-  }
-
-  if (min[0] === Infinity) {
-     return {
-      min: [0,0,0],
-      max: [0,0,0],
-      center: [0,0,0],
-      size: [0,0,0],
-      radius: 0
-    };
-  }
-
-  const center = [
-    (min[0] + max[0]) / 2,
-    (min[1] + max[1]) / 2,
-    (min[2] + max[2]) / 2,
-  ];
-
-  const size = [
-    max[0] - min[0],
-    max[1] - min[1],
-    max[2] - min[2],
-  ];
-
-  const dx = max[0] - center[0];
-  const dy = max[1] - center[1];
-  const dz = max[2] - center[2];
-  const radius = Math.sqrt(dx*dx + dy*dy + dz*dz);
-
-  return { min, max, center, size, radius };
 }

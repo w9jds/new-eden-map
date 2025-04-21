@@ -1,0 +1,67 @@
+
+.icon-switch-container {
+  display: inline-flex;
+  position: relative;
+  background-color: #e9ecef;
+  border-radius: 30px;
+  padding: 5px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.icon-switch-options {
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.icon-switch-option {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: none;
+  border: none;
+  padding: 8px;
+  margin: 0;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  color: #6c757d;
+  transition: color 0.3s ease;
+  outline: none;
+}
+
+.icon-switch-option.active {
+  color: #ffffff;
+}
+
+.icon-switch-option:focus-visible {
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.5);
+}
+
+.icon-switch-bubble {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 40px;
+  height: 40px;
+  background-color: #007bff;
+  border-radius: 50%;
+  z-index: 0;
+  transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  transform: translateX(0);
+}
+
+.icon-switch-container.stage-0 .icon-switch-bubble {
+  transform: translateX(0%);
+}
+
+.icon-switch-container.stage-1 .icon-switch-bubble {
+  transform: translateX(calc(40px + 0px));
+}
+
+.icon-switch-container.stage-2 .icon-switch-bubble {
+  transform: translateX(calc(2 * (40px + 0px)));
+}

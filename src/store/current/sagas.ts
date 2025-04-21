@@ -1,4 +1,4 @@
-import { all, cancel, fork, put, select, takeEvery } from 'redux-saga/effects';
+import { all, cancel, fork, select, takeEvery } from 'redux-saga/effects';
 import { Database, ref } from 'firebase/database';
 import { Payload, sync } from 'store/firebase';
 
@@ -7,23 +7,23 @@ import { setStatistics, setSystem } from './reducer';
 
 let task;
 
-function* attachTheraListener() {
-  const database: Database = yield select(getFbDatabase);
-  const reference = ref(database, 'universe/thera');
+// function* attachTheraListener() {
+//   const database: Database = yield select(getFbDatabase);
+//   const reference = ref(database, 'universe/thera');
 
-  // yield all([
-  //   fork(sync, reference, {
-  //     successAction: setTheraConnection
-  //   }, 'child_added'),
-  //   fork(sync, reference, {
-  //     successAction: setTheraConnection
-  //   }, 'child_changed'),
-  //   fork(sync, reference, {
-  //     successAction: deleteTheraConnection,
-  //     transform: (data: Payload) => data.snapshot.key,
-  //   }, 'child_removed'),
-  // ]);
-}
+//   yield all([
+//     fork(sync, reference, {
+//       successAction: setTheraConnection
+//     }, 'child_added'),
+//     fork(sync, reference, {
+//       successAction: setTheraConnection
+//     }, 'child_changed'),
+//     fork(sync, reference, {
+//       successAction: deleteTheraConnection,
+//       transform: (data: Payload) => data.snapshot.key,
+//     }, 'child_removed'),
+//   ]);
+// }
 
 function* systemStatistics(action: ReturnType<typeof setSystem>) {
   if (task) yield cancel(task);

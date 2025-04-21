@@ -94,6 +94,7 @@ export const useKillPulses = () => {
         const geometry = new CircleGeometry(12, 64);
         const pulse = new Mesh(geometry, material);
 
+        pulse.renderOrder = 0;
         pulse.position.copy(startPosition);
         scene.add(pulse);
 

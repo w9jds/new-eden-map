@@ -12,6 +12,8 @@ export const getUniverse = (state: ApplicationState) => state.current.universe;
 
 export const getStatistics = (state: ApplicationState) => state.current.statistics;
 
+export const getCluster = (state: ApplicationState) => state.current.cluster;
+
 export const getStatisticData = createSelector(
   [getStatistics], (details: SystemStatistics) => {
     if (details?.statistics) {

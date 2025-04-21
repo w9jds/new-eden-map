@@ -1,11 +1,10 @@
 /* eslint-disable react/no-unknown-property */
-import { SecurityColors } from 'constants/systems';
-
 import React, { FC, Fragment, useMemo, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { BufferGeometry, Color, MathUtils,  Points, TextureLoader } from 'three';
 import { ThreeEvent, useFrame, useThree } from '@react-three/fiber';
+import { getSecurityColor } from 'utils/universe';
 
 import { getCurrentSystem, getUniverse } from 'store/current/selectors';
 import { setSystem } from 'store/current/reducer';
@@ -112,7 +111,7 @@ const Stars: FC<Props> = ({ ids }) => {
 
   const getColor = (index: number) => {
     const { solarSystemID, security, regionID } = details[+ids[index]];
-    const securityColor = SecurityColors[+security.toFixed(1)];
+    const securityColor = getSecurityColor(security);
 
     if (!route?.length && !system) {
       radii[index] = Radius.FOCUSED;
@@ -186,7 +185,7 @@ const Stars: FC<Props> = ({ ids }) => {
 
   return ids && (
     <Fragment>
-      <points ref={starRef} onClick={onStarClick}>
+      <points ref={starRef} renderOrder={1} onClick={onStarClick}>
         <sphereGeometry attach="geometry">
           <bufferAttribute attach="attributes-size" count={ids.length} array={radii} itemSize={1} />
           <bufferAttribute attach="attributes-alpha" count={ids.length} array={alpha} itemSize={1} />

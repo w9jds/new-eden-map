@@ -3,16 +3,17 @@ import classnames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 
 import SystemTile from 'controls/SystemTile';
-import { Button, Divider, Paper } from '@mui/material';
+import { Button, ButtonGroup, Divider, Paper } from '@mui/material';
 import { Close } from '@mui/icons-material';
 
 import { System } from 'models/universe';
 import { systems } from 'constants/systems';
-import { setSystem } from 'store/current/reducer';
+import { setCluster, setSystem } from 'store/current/reducer';
 import { isNavOpen } from 'store/navigation/selectors';
 import { getCurrentSystem } from 'store/current/selectors';
 
 import './index.scss';
+import { SpaceClusters } from 'models/states';
 
 const SearchOverlay = () => {
   const dispatch = useDispatch();
@@ -67,33 +68,46 @@ const SearchOverlay = () => {
   }
 
   return !isNavigating && (
-    <Paper className={overlay}>
-      <div className="search-bar">
-        <input className="search"
-          placeholder="Search New Eden"
-          value={value}
-          onChange={onSearchChange}/>
-
+    <div className="overlay-container">
+      <Paper className={overlay}>
+        <div className="search-bar">
+          <input className="search"
+            placeholder="Search New Eden"
+            value={value}
+            onChange={onSearchChange}
+          />
+          {
+            current && (
+              <Button variant="text" onClick={onClear}>
+                <Close />
+              </Button>
+            )
+          }
+        </div>
         {
-          current && (
-            <Button variant="text" onClick={onClear}>
-              <Close />
-            </Button>
+          isOpen && (
+            <Fragment>
+              <Divider />
+              <div className="search-results">
+                {options.map(option => <SystemTile key={option} onClick={onResultClick} systemId={option} />)}
+              </div>
+            </Fragment>
           )
         }
-      </div>
+      </Paper>
 
-      {
-        isOpen && (
-          <Fragment>
-            <Divider />
-            <div className="search-results">
-              {options.map(option => <SystemTile key={option} onClick={onResultClick} systemId={option} />)}
-            </div>
-          </Fragment>
-        )
-      }
-    </Paper>
+      <ButtonGroup size="small">
+          <Button onClick={() => dispatch(setCluster(SpaceClusters.Known))}>
+            Known
+          </Button>
+          <Button onClick={() => dispatch(setCluster(SpaceClusters.Wormhole1))}>
+            Wormholes
+          </Button>
+          <Button onClick={() => dispatch(setCluster(SpaceClusters.Wormhole2))}>
+            Wormholes
+          </Button>
+      </ButtonGroup>
+    </div>
   );
 }
 

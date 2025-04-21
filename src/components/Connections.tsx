@@ -54,7 +54,7 @@ const Connections: FC = () => {
   }, [connections]);
 
   return (
-    <lineSegments>
+    <lineSegments renderOrder={-1}>
       <lineBasicMaterial transparent opacity={0.13}/>
       <bufferGeometry>
         <bufferAttribute attach="attributes-lineSize" count={count} array={stroke} itemSize={1} />

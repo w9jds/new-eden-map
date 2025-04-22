@@ -9,11 +9,12 @@ import { FirebaseConfig } from 'config';
 import { setFirebaseApp } from 'store/current/reducer';
 import { registerFeed } from 'store/kills/reducer';
 
-import NewEden from './NewEden';
 import SystemOverlay from 'controls/Overlays/System';
 import SearchOverlay from 'controls/Overlays/Search';
 import NavigationOverlay from 'controls/Overlays/Navigation';
 import KillFeed from 'controls/Overlays/KillFeed';
+import ViewSettings from 'controls/Overlays/Settings';
+import NewEden from './NewEden';
 
 import './Application.scss';
 
@@ -43,6 +44,7 @@ const Application = () => {
         <NewEden />
       </Canvas>
 
+      <ViewSettings />
       <SystemOverlay />
       <SearchOverlay />
       <NavigationOverlay />

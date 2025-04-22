@@ -1,6 +1,9 @@
 @import "../../../stylesheets/placeholders.scss";
 
 .overlay-container {
+  display: flex;
+  align-items: flex-start;
+
   position: absolute;
   z-index: 10000;
   left: 12px;
@@ -10,6 +13,7 @@
 .search-overlay {
   border-radius: 24px !important;
   background-color: #222 !important;
+  margin-right: 8px;
 
   &.collapsed {
     .search-bar {

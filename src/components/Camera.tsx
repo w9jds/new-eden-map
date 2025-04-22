@@ -42,26 +42,23 @@ export const useCamera = () => {
 
   useEffect(() => {
     scene.add(camera);
-    camera.position.copy(Clusters['known'].position);
+    camera.position.copy(Clusters[cluster].position);
     
 
     const oc = new OrbitControls(camera, gl.domElement);
-    // oc.enablePan = false;
+    oc.enablePan = false;
     oc.enableDamping = true;
     oc.dampingFactor = 0.05;
     oc.minTargetRadius = 5;
     oc.maxDistance = 800;
     oc.maxPolarAngle = Math.PI / 2;
-    oc.target.copy(Clusters['known'].target);
+    oc.target.copy(Clusters[cluster].target);
 
     controls.current = oc;
   }, []);
 
   useEffect(() => {
     const { position, target } = Clusters[cluster];
-    // camera.position.copy(position);
-    // controls.current.target.copy(target);
-    // controls.current.update();
 
     const startTarget = controls.current.target.clone();
     const startPosition = camera.position.clone();
@@ -118,30 +115,30 @@ export const useCamera = () => {
     }
 
     if (prev.current && !current) {
-      // const endTarget = new Vector3(...known.center);
-      // const endPosition = new Vector3(...KnownSpace);
+      const endTarget = Clusters[cluster].target;
+      const endPosition = Clusters[cluster].position;
 
-      // const tweenTarget = { t: 0 };
-      // tween.current = gsap.to(tweenTarget, {
-      //   t: 1,
-      //   duration: 3,
-      //   ease: "power2.inOut",
-      //   onUpdate: function() {
-      //     controls.current.target.lerpVectors(startTarget, endTarget, tweenTarget.t);
-      //     camera.position.lerpVectors(startPosition, endPosition, tweenTarget.t);
+      const tweenTarget = { t: 0 };
+      tween.current = gsap.to(tweenTarget, {
+        t: 1,
+        duration: 3,
+        ease: "power2.inOut",
+        onUpdate: function() {
+          controls.current.target.lerpVectors(startTarget, endTarget, tweenTarget.t);
+          camera.position.lerpVectors(startPosition, endPosition, tweenTarget.t);
 
-      //     camera.updateProjectionMatrix();
-      //     controls.current.update();
-      //   },
-      //   onComplete: function() {
-      //     controls.current.target.copy(endTarget);
-      //     camera.position.copy(endPosition);
+          camera.updateProjectionMatrix();
+          controls.current.update();
+        },
+        onComplete: function() {
+          controls.current.target.copy(endTarget);
+          camera.position.copy(endPosition);
 
-      //     controls.current.update();
-      //     camera.updateProjectionMatrix();
-      //     tween.current = null;
-      //   }
-      // });
+          controls.current.update();
+          camera.updateProjectionMatrix();
+          tween.current = null;
+        }
+      });
     }
 
     prev.current = current;
@@ -151,10 +148,6 @@ export const useCamera = () => {
     if (!tween.current && controls.current) {
       controls.current.update();
     }
-
-    console.log('position', camera.position);
-    console.log('rotation', camera.rotation);
-    console.log('target', controls.current.target);
   });
 
   return null;

@@ -1,19 +1,21 @@
+import { systems } from 'constants/systems';
+
 import React, { Fragment, useState, useMemo, useEffect } from 'react';
 import classnames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
 
+import IconSwitch from 'controls/IconSwitch';
 import SystemTile from 'controls/SystemTile';
 import { Button, ButtonGroup, Divider, Paper } from '@mui/material';
 import { Close } from '@mui/icons-material';
 
 import { System } from 'models/universe';
-import { systems } from 'constants/systems';
+import { SpaceClusters } from 'models/states';
 import { setCluster, setSystem } from 'store/current/reducer';
 import { isNavOpen } from 'store/navigation/selectors';
 import { getCurrentSystem } from 'store/current/selectors';
 
 import './index.scss';
-import { SpaceClusters } from 'models/states';
 
 const SearchOverlay = () => {
   const dispatch = useDispatch();
@@ -95,6 +97,10 @@ const SearchOverlay = () => {
           )
         }
       </Paper>
+
+      <IconSwitch>
+
+      </IconSwitch>
 
       <ButtonGroup size="small">
           <Button onClick={() => dispatch(setCluster(SpaceClusters.Known))}>

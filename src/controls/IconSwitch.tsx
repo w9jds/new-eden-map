@@ -1,21 +1,22 @@
-import React, { FC, ReactNode, useState } from 'react';
+import React, { FC, PropsWithChildren, useMemo, useState } from 'react';
 
 import './IconSwitch.scss';
 
 type Props = {
   initialState?: number,
-  icons: ReactNode[],
   onChange?: (index: number) => void,
   className?: string,
 }
 
-const IconSwitch: FC<Props> = ({
+const IconSwitch: FC<PropsWithChildren<Props>> = ({
   initialState = 0,
-  icons,
+  children,
   onChange,
   className,
 }) => {
-  const [state, setState] = useState(Math.max(0, Math.min(icons.length - 1, initialState)));
+  const [state, setState] = useState(
+    Math.max(0, Math.min(React.Children.count(children) - 1, initialState))
+  );
 
   const handleIconClick = (index) => {
     if (index !== state) {
@@ -28,11 +29,10 @@ const IconSwitch: FC<Props> = ({
 
   const stageClassName = `stage-${state}`;
 
-  return (
-    <div className={`icon-switch-container ${stageClassName} ${className}`} role="radiogroup">
-      <div className="icon-switch-bubble" aria-hidden="true"></div>
-      <div className="icon-switch-options">
-        {icons.map((icon, index) => (
+  const buttons = useMemo(() =>
+    React.Children.map(children, (child, index) => {
+      if (React.isValidElement(child)) {
+        return (
           <button
             key={index}
             type="button"
@@ -43,9 +43,21 @@ const IconSwitch: FC<Props> = ({
             aria-label={`Option ${index + 1}`}
             tabIndex={state === index ? 0 : -1}
           >
-            {icon}
+            {child}
           </button>
-        ))}
+        );
+      }
+
+      return child;
+    }),
+    [children, state, handleIconClick]
+  );
+
+  return (
+    <div className={`icon-switch-container ${stageClassName} ${className}`} role="radiogroup">
+      <div className="icon-switch-bubble" aria-hidden="true"></div>
+      <div className="icon-switch-options">
+        {buttons}
       </div>
     </div>
   );

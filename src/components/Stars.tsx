@@ -109,6 +109,18 @@ const Stars: FC<Props> = ({ ids }) => {
     }
   }, [ids]);
 
+  // useEffect(() => {
+  //   const geometry = new SphereGeometry();
+  //   const material = new ShaderMaterial({
+  //     transparent: true,
+  //     uniforms,
+  //     vertexShader: STAR_VERTEX,
+  //     fragmentShader: STAR_FRAGMENT
+  //   });
+
+  //   const points = new Points()
+  // }, [positions, radii, colors, alpha])
+
   const getColor = (index: number) => {
     const { solarSystemID, security, regionID } = details[+ids[index]];
     const securityColor = getSecurityColor(security);

@@ -18,16 +18,16 @@ type CameraPosition = {
 
 const Clusters: Record<SpaceClusters, CameraPosition> = {
   [SpaceClusters.Known]: {
-    position: new Vector3(0.0004644906058459782, -565.1667887947551, -0.0003220098946984917),
-    target: new Vector3(0, 0, 0),
+    position: new Vector3(-135.7457034231992, -592.461731689255, 43.10732897104868),
+    target: new Vector3(-135.74624702204352, -0.00014045092898212373, 43.10756464505782),
   },
   [SpaceClusters.Wormhole1]: {
-    position: new Vector3(7704.441399130711, -755.0704954348928, -9488.52380004254),
-    target: new Vector3(7704.441601384389, 4.92950456472716, -9488.52453267123),
+    position: new Vector3(7645.657724397371, -785.6880161038105, -9522.410584321784),
+    target: new Vector3(7645.657241551519, 4.9294714466579945, -9522.411210369622),
   },
   [SpaceClusters.Wormhole2]: {
-    position: new Vector3(7470.350552798675, 932.4846327917217, -9802.840230027234),
-    target: new Vector3(7521.4758394567525, 1569.8713804253362, -9677.487068797976),
+    position: new Vector3(7612.794957811452, -2120.622476031416, -9583.297403309087),
+    target: new Vector3(7612.794499953768, -1544.6764552514085, -9583.297053761802),
   }
 }
 
@@ -43,13 +43,12 @@ export const useCamera = () => {
   useEffect(() => {
     scene.add(camera);
     camera.position.copy(Clusters[cluster].position);
-    
 
     const oc = new OrbitControls(camera, gl.domElement);
     oc.enablePan = false;
     oc.enableDamping = true;
     oc.dampingFactor = 0.05;
-    oc.minTargetRadius = 5;
+    // oc.minTargetRadius = 10;
     oc.maxDistance = 800;
     oc.maxPolarAngle = Math.PI / 2;
     oc.target.copy(Clusters[cluster].target);

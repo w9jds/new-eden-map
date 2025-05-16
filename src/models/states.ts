@@ -1,6 +1,7 @@
 import { FirebaseApp } from 'firebase/app';
+import { RouteType } from './resolvers-types';
 
-import { System, SystemStatistics } from './universe';
+import { System } from './universe';
 import { KillMail } from './killmail';
 
 export enum SpaceClusters {
@@ -20,16 +21,14 @@ export type CurrentState = {
 
   readonly system: System;
   readonly universe: Record<number, System>;
-  readonly statistics: SystemStatistics;
   readonly cluster: SpaceClusters;
 }
 
 export type NavigationState = {
   readonly open: boolean;
-  readonly start: number;
-  readonly end: number;
-  readonly flag: 'shortest' | 'secure' | 'less-safe';
+  readonly flag: RouteType;
 
+  readonly defaultId?: number;
   readonly route: number[];
 }
 

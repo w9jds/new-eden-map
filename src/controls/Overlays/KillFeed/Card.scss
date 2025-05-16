@@ -4,10 +4,16 @@
   display: flex;
   padding: 0.8rem;
   position: relative;
-  margin-bottom: 8px;
   min-height: 135px;
-  width: 300px;
   overflow: hidden;
+  background-color: $dark-paper;
+  border-radius: 0.4rem;
+  width: 300px;
+  color: white;
+
+  &:not(:last-of-type) {
+    margin-bottom: 8px;
+  }
 
   &:hover {
     cursor: pointer;

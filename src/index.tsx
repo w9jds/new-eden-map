@@ -12,6 +12,7 @@ import current from 'store/current/reducer';
 import navigation from 'store/navigation/reducer';
 import { configureStore } from '@reduxjs/toolkit';
 import { listenerMiddleware } from 'store/middleware';
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 
 const sagaMiddleware = createSagaMiddleware();
 const middleware = [
@@ -40,13 +41,20 @@ const theme = createTheme({
   }
 });
 
+const client = new ApolloClient({
+  uri: 'https://gql.new-eden.io/graphql',
+  cache: new InMemoryCache(),
+});
+
 sagaMiddleware.run(sagas);
 
 createRoot(document.getElementById('root'))
   .render(
     <ThemeProvider theme={theme}>
-      <Provider store={store}>
-        <Application />
-      </Provider>
+      <ApolloProvider client={client}>
+        <Provider store={store}>
+          <Application />
+        </Provider>
+      </ApolloProvider>
     </ThemeProvider>
   );

@@ -1,43 +1,41 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { RouteType } from 'models/resolvers-types';
 import { NavigationState } from 'models/states';
 
 const initialState: NavigationState = {
   open: false,
-  start: undefined,
-  end: undefined,
-  flag: 'shortest',
-
+  flag: RouteType.Shortest,
+  defaultId: undefined,
   route: [],
 };
+
+type TogglePayload = {
+  state: boolean;
+  defaultId?: number;
+}
 
 const navigationSlice = createSlice({
   name: 'navigation',
   initialState,
   reducers: {
-    setDestination: (state, action: PayloadAction<number>) => {
-      state.end = action.payload;
-    },
-    setOrigin: (state, action: PayloadAction<number>) => {
-      state.start = action.payload;
-    },
     setRoute: (state, action: PayloadAction<number[]>) => {
       state.route = action.payload;
     },
-    setFlag: (state, action: PayloadAction<'shortest' | 'secure' | 'less-safe'>) => {
+    setFlag: (state, action: PayloadAction<RouteType>) => {
       state.flag = action.payload;
     },
-    toggleNav: (state, action: PayloadAction<boolean>) => {
-      if (action.payload === false) {
-        state.start = undefined;
-        state.end = undefined;
+    toggleNav: (state, action: PayloadAction<TogglePayload>) => {
+      if (action.payload.state === false) {
+        state.defaultId = undefined;
         state.route = [];
       }
 
-      state.open = action.payload;
+      state.defaultId = action.payload?.defaultId;
+      state.open = action.payload.state;
     }
   }
 })
 
-export const { setDestination, setOrigin, setFlag, setRoute, toggleNav } = navigationSlice.actions;
+export const { setFlag, setRoute, toggleNav } = navigationSlice.actions;
 
 export default navigationSlice;

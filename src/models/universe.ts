@@ -22,29 +22,6 @@ export type System = {
   neighbors: number[];
 }
 
-export type SystemStatistics = {
-  sovereignty?: Sovereignty;
-  statistics?: Record<string, Statistics>;
-  factionWarfare?: FactionWarfare;
-}
-
-type FactionWarfare = {
-  contested: WarfareSystemStatus;
-  occupierFaction: string;
-  occupierFactionId: number;
-  ownerFaction: string;
-  ownerFactionId: number;
-  victoryPoints: number;
-  victoryPointsThreshold: number;
-}
-
-type Sovereignty = {
-  allianceId?: number;
-  allianceName?: string;
-  corporationId?: number;
-  corporationName?: string;
-}
-
 export type Region = {
   id: number;
   name: string;
@@ -72,3 +49,4 @@ export type Statistics = {
   }
   processed_at: number;
 }
+

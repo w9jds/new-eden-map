@@ -36,7 +36,7 @@ export const systemDetails: Record<number, System> = systems.reduce(
       radius: current.radius / 1000500000000,
       position: [
         current.position[0] / 1000000000000000,
-        current.position[1] / 1000000000000000,
+        -(current.position[1] / 1000000000000000),
         current.position[2] / 1000000000000000
       ]
     };

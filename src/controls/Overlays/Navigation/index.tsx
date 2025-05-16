@@ -1,33 +1,91 @@
-import React, { FC, Fragment, useMemo, useState } from 'react';
-import { connect, useDispatch, useSelector } from 'react-redux';
+import React, { FC, Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { Close } from '@mui/icons-material';
-import { Button, ButtonGroup, Divider, Paper, TextField, Typography } from '@mui/material';
+import { Button, ButtonGroup, CircularProgress, Divider, Paper, TextField, Typography } from '@mui/material';
 import SystemTile from 'controls/SystemTile';
 
 import { System } from 'models/universe';
-import { ApplicationState } from 'models/states';
+import { RouteType, SolarSystem } from 'models/resolvers-types';
 import { systemDetails, systems } from 'constants/systems';
-import { setDestination, setFlag, setOrigin, toggleNav } from 'store/navigation/reducer';
-import { getDestination, getFlag, getOrigin, getRoute, isNavOpen } from 'store/navigation/selectors';
+import { setFlag, setRoute, toggleNav } from 'store/navigation/reducer';
+import { getDefaultId, getFlag, isNavOpen } from 'store/navigation/selectors';
+import { useRouteQuery } from 'queries/Route';
 
 import './index.scss';
 
+const initial = {
+  isOpen: false,
+}
 
-type Props = ReturnType<typeof mapStateToProps>;
-
-const NavigationOverlay: FC<Props> = ({
-  route,
-  isOpen,
-  originId,
-  destinationId,
-}) => {
+const NavigationOverlay: FC = () => {
   const dispatch = useDispatch();
+  const prev = useRef(initial);
+
+  const defaultId = useSelector(getDefaultId);
+  const isOpen = useSelector(isNavOpen);
   const flag = useSelector(getFlag);
+
+  const [originId, setOrigin] = useState<number>();
+  const [destinationId, setDestination] = useState<number>();
+  const [stops, setStops] = useState<SolarSystem[]>();
 
   const [focus, setFocus] = useState('');
   const [query, setQuery] = useState('');
   const [options, setOptions] = useState<number[]>([]);
+
+  const { getRoute, loading, data, error } = useRouteQuery();
+
+  useEffect(() => {
+    if (prev.current.isOpen !== isOpen && isOpen && defaultId) {
+      setDestination(defaultId);
+    }
+
+    if (prev.current.isOpen && !isOpen) {
+      setOrigin(undefined);
+      setDestination(undefined);
+    }
+
+    prev.current.isOpen = isOpen;
+  }, [isOpen, defaultId])
+
+  useEffect(() => {
+    if (isOpen && destinationId && originId && flag) {
+      getRoute({
+        variables: {
+          options: {
+            start: originId,
+            destinations: [destinationId],
+            type: flag
+          }
+        }
+      });
+    }
+  }, [destinationId, originId, flag])
+
+  useEffect(() => {
+    if (!isOpen || loading || error) {
+      setStops(undefined);
+      return;
+    }
+
+    if (data?.routes?.[0] && data?.routes?.[0]?.length > 0) {
+      const gates = data.routes[0];
+      const systems: SolarSystem[] = [];
+
+      for (let i = 0; i < gates.length; i++) {
+        const gate = gates[i];
+        systems.push(gate.system);
+
+        if (i + 1 === gates.length) {
+          systems.push(gate.destination.system);
+        }
+      }
+
+      dispatch(setRoute(systems.map(system => system.id)));
+      setStops(systems);
+    }
+  }, [data, error, loading])
 
   const destination = useMemo(
     () => {
@@ -51,17 +109,11 @@ const NavigationOverlay: FC<Props> = ({
     [originId, focus, query]
   );
 
-  const stops = useMemo(
-    () => {
-      if (route) {
-        return route.map(id => systemDetails[id]);
-      }
-    }, [route]
-  );
 
   const resetState = () => {
     setQuery('');
     setOptions([]);
+    setStops(undefined);
     setFocus(undefined);
   }
 
@@ -78,9 +130,9 @@ const NavigationOverlay: FC<Props> = ({
 
   const onResultClick = (e, system: System) => {
     if (focus === 'origin') {
-      dispatch(setOrigin(system.solarSystemID));
+      setOrigin(system.solarSystemID);
     } else if (focus === 'destination') {
-      dispatch(setDestination(system.solarSystemID));
+      setDestination(system.solarSystemID);
     }
 
     resetState();
@@ -94,10 +146,12 @@ const NavigationOverlay: FC<Props> = ({
 
   const onClose = () => {
     resetState();
-    dispatch(toggleNav(false));
+    dispatch(toggleNav({ state: false }));
+    setOrigin(undefined);
+    setDestination(undefined);
   }
 
-  const updateRouting = (type: 'shortest' | 'secure' | 'less-safe') => () => {
+  const updateRouting = (type: RouteType) => () => {
     dispatch(setFlag(type))
   }
 
@@ -105,13 +159,13 @@ const NavigationOverlay: FC<Props> = ({
     <Paper className="navigation-overlay">
       <div className="actions">
         <ButtonGroup className="types" size="small">
-          <Button variant={flag === 'shortest' ? 'contained' : 'outlined'} onClick={updateRouting('shortest')}>
+          <Button variant={flag === RouteType.Shortest ? 'contained' : 'outlined'} onClick={updateRouting(RouteType.Shortest)}>
             Shortest
           </Button>
-          <Button variant={flag === 'secure' ? 'contained' : 'outlined'} onClick={updateRouting('secure')}>
+          <Button variant={flag === RouteType.Secure ? 'contained' : 'outlined'} onClick={updateRouting(RouteType.Secure)}>
             Secure
           </Button>
-          <Button variant={flag === 'less-safe' ? 'contained' : 'outlined'} onClick={updateRouting('less-safe')}>
+          <Button variant={flag === RouteType.LessSafe ? 'contained' : 'outlined'} onClick={updateRouting(RouteType.LessSafe)}>
             Less Secure
           </Button>
         </ButtonGroup>
@@ -140,18 +194,27 @@ const NavigationOverlay: FC<Props> = ({
 
       {
         options && (
-          <Fragment>
+          <>
             <Divider />
             <div className="search-results">
               {options.map(option => <SystemTile mini key={option} onClick={onResultClick} systemId={option} />)}
             </div>
-          </Fragment>
+          </>
         )
       }
 
       {
-        stops?.length > 0 && !focus && (
-          <Fragment>
+        loading && !focus && (
+          <>
+            <Divider />
+            <CircularProgress />
+          </>
+        )
+      }
+
+      {
+        stops?.length > 0 && !loading && !focus && (
+          <>
             <Divider />
             <div className="pathing">
               <Typography variant="h6">
@@ -160,25 +223,18 @@ const NavigationOverlay: FC<Props> = ({
 
               <div className="pathing-route">
                 {stops.map(stop =>
-                  <div key={stop?.solarSystemID} className="stop">
+                  <div key={stop?.id} className="stop">
                     <span>{stop?.name}</span>
-                    <span>{stop?.security.toFixed(1)}</span>
+                    <span>{stop?.securityStatus.toFixed(1)}</span>
                   </div>
                 )}
               </div>
             </div>
-          </Fragment>
+          </>
         )
       }
     </Paper>
   );
 }
 
-const mapStateToProps = (state: ApplicationState) => ({
-  isOpen: isNavOpen(state),
-  route: getRoute(state),
-  originId: getOrigin(state),
-  destinationId: getDestination(state),
-});
-
-export default connect(mapStateToProps)(NavigationOverlay);
+export default NavigationOverlay;

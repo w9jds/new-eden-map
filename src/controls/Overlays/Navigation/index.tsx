@@ -2,17 +2,18 @@ import React, { FC, Fragment, useEffect, useMemo, useRef, useState } from 'react
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Close } from '@mui/icons-material';
-import { Button, ButtonGroup, CircularProgress, Divider, Paper, TextField, Typography } from '@mui/material';
+import { Button, ButtonGroup, CircularProgress, Divider, ListItemIcon, ListItemText, MenuItem, Paper, TextField, Typography } from '@mui/material';
 import SystemTile from 'controls/SystemTile';
 
 import { System } from 'models/universe';
-import { RouteType, SolarSystem } from 'models/resolvers-types';
+import { RouteType, SolarSystem, Stargate } from 'models/resolvers-types';
 import { systemDetails, systems } from 'constants/systems';
 import { setFlag, setRoute, toggleNav } from 'store/navigation/reducer';
 import { getDefaultId, getFlag, isNavOpen } from 'store/navigation/selectors';
 import { useRouteQuery } from 'queries/Route';
 
 import './index.scss';
+import GateBridge from './Bridge';
 
 const initial = {
   isOpen: false,
@@ -28,6 +29,8 @@ const NavigationOverlay: FC = () => {
 
   const [originId, setOrigin] = useState<number>();
   const [destinationId, setDestination] = useState<number>();
+
+  const [gates, setGates] = useState<Stargate[]>([]);
   const [stops, setStops] = useState<SolarSystem[]>();
 
   const [focus, setFocus] = useState('');
@@ -82,6 +85,7 @@ const NavigationOverlay: FC = () => {
         }
       }
 
+      setGates(gates);
       dispatch(setRoute(systems.map(system => system.id)));
       setStops(systems);
     }
@@ -222,11 +226,18 @@ const NavigationOverlay: FC = () => {
               </Typography>
 
               <div className="pathing-route">
-                {stops.map(stop =>
-                  <div key={stop?.id} className="stop">
-                    <span>{stop?.name}</span>
-                    <span>{stop?.securityStatus.toFixed(1)}</span>
-                  </div>
+                {stops.map((stop, i) =>
+                  <MenuItem key={stop.id} className="stop">
+                    <ListItemIcon className="status">
+                      <span>
+                        {stop?.securityStatus.toFixed(1)}
+                      </span>
+                    </ListItemIcon>
+                    <ListItemText className="results">
+                      {stop?.name}
+                    </ListItemText>
+                    {(stops.length - 1) !== i ? <GateBridge index={i} gate={gates[i]} /> : null }
+                  </MenuItem>
                 )}
               </div>
             </div>

@@ -1,0 +1,54 @@
+
+
+.gate {
+  position: absolute;
+  border-radius: 25px;
+  background-color: #212121;
+  height: 56px;
+  width: 24px;
+  z-index: 1;
+  top: 4px;
+
+  &:hover {
+    background-color: darken($color: #212121, $amount: 5%)
+  }
+
+  &.stagger-end {
+    right: 12px; 
+  }
+
+  &.stagger-offset {
+    right: 48px;
+  }
+
+  &-start {
+    position: absolute;
+    border-radius: 50%;
+    background-color: #a3a3a3;
+    height: 12px;
+    width: 12px;
+    top: 6px;
+    left: 6px;
+  }
+
+  &-end {
+    position: absolute;
+    border-radius: 50%;
+    background-color: #a3a3a3;
+    height: 12px;
+    width: 12px;
+    bottom: 6px;
+    left: 6px;
+  }
+
+  .camped {
+    background-color: red;
+  }
+  
+  .active {
+    outline-style: solid;
+    outline-color: #da3232;
+    outline-offset: 3px;
+    outline-width: 2px;
+  }
+}

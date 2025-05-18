@@ -25,6 +25,7 @@ export const DetailsQuery = gql`
         destination {
           name
           system {
+            id
             name
             securityStatus
           }
@@ -40,7 +41,7 @@ export const DetailsQuery = gql`
           ticker
         }
       }
-      statistics(hours: 48) {
+      statistics(hours: 24) {
         jumps
         npcKills
         podKills

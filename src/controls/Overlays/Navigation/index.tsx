@@ -1,8 +1,8 @@
-import React, { FC, Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Close } from '@mui/icons-material';
-import { Button, ButtonGroup, CircularProgress, Divider, ListItemIcon, ListItemText, MenuItem, Paper, TextField, Typography } from '@mui/material';
+import { Button, ButtonGroup, Divider, ListItemIcon, ListItemText, MenuItem, Paper, TextField, Typography } from '@mui/material';
 import SystemTile from 'controls/SystemTile';
 
 import { System } from 'models/universe';
@@ -14,6 +14,7 @@ import { useRouteQuery } from 'queries/Route';
 
 import './index.scss';
 import GateBridge from './Bridge';
+import { LoadingSection } from 'controls/LoadingSection';
 
 const initial = {
   isOpen: false,
@@ -201,20 +202,15 @@ const NavigationOverlay: FC = () => {
           <>
             <Divider />
             <div className="search-results">
-              {options.map(option => <SystemTile mini key={option} onClick={onResultClick} systemId={option} />)}
+              {options.map(option =>
+                <SystemTile mini key={option} onClick={onResultClick} systemId={option} />
+              )}
             </div>
           </>
         )
       }
 
-      {
-        loading && !focus && (
-          <>
-            <Divider />
-            <CircularProgress />
-          </>
-        )
-      }
+      { loading && !focus && <LoadingSection /> }
 
       {
         stops?.length > 0 && !loading && !focus && (

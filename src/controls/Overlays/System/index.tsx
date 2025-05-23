@@ -2,7 +2,7 @@ import React, { FC, useRef, useMemo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLazyQuery } from '@apollo/client';
 
-import { CircularProgress, Divider, Fab, Paper, Typography } from '@mui/material';
+import { Divider, Fab, Paper, Typography } from '@mui/material';
 import { Directions } from '@mui/icons-material';
 import SystemStatistics from './Statistics';
 import SystemNeighbors from './Neighbors';
@@ -17,6 +17,7 @@ import { getCurrentSystem } from 'store/current/selectors';
 import { toggleNav } from 'store/navigation/reducer';
 
 import './index.scss';
+import { LoadingSection } from 'controls/LoadingSection';
 
 const SystemOverlay: FC = () => {
   const dispatch = useDispatch();
@@ -59,14 +60,7 @@ const SystemOverlay: FC = () => {
     }
 
     if (loading || !data) {
-      return (
-        <>
-          <Divider />
-          <div className="loading">
-            <CircularProgress size="30px" />
-          </div>
-        </>
-      );
+      return <LoadingSection />;
     }
 
     return (

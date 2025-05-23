@@ -27,38 +27,39 @@ const SystemStatistics: FC<Props> = ({
             <YAxis yAxisId="jumps" hide orientation='right'/>
 
             <Bar
-              yAxisId="jumps" 
-              dataKey="jumps" 
+              yAxisId="jumps"
+              dataKey="jumps"
               fill="#3a80ff"
               stroke='#3a80ff'
-              barSize={4} 
+              barSize={3}
+              opacity={0.75}
             />
 
-            <Line 
-              yAxisId="kills" 
-              type="monotone" 
-              dataKey="npcKills" 
+            <Line
+              yAxisId="kills"
+              type="monotone"
+              dataKey="npcKills"
               stroke="#06e221"
               strokeWidth={3}
-              dot={null} 
+              dot={null}
             />
 
-            <Line 
-              yAxisId="kills" 
+            <Line
+              yAxisId="kills"
               type="monotone"
-              dataKey="podKills" 
-              stroke="#ff4c17" 
+              dataKey="podKills"
+              stroke="#ff4c17"
               strokeWidth={3}
-              dot={null} 
+              dot={null}
             />
 
-            <Line 
-              yAxisId="kills" 
-              type="monotone" 
-              dataKey="shipKills" 
-              stroke="#ffb80d" 
+            <Line
+              yAxisId="kills"
+              type="monotone"
+              dataKey="shipKills"
+              stroke="#ffb80d"
               strokeWidth={3}
-              dot={null} 
+              dot={null}
             />
           </ComposedChart>
         </ResponsiveContainer>

@@ -41,7 +41,7 @@ export const DetailsQuery = gql`
           ticker
         }
       }
-      statistics(hours: 24) {
+      statistics(hours: 48) {
         jumps
         npcKills
         podKills

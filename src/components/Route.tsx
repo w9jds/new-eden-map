@@ -31,6 +31,7 @@ export const useRoute = () => {
     if (route?.length) {
       const line = new Line();
       line.material = new LineBasicMaterial({
+        linewidth: 1.3,
         transparent: true,
         opacity: 0.6,
         color: new Color(0xffffff),

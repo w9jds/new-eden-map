@@ -41,7 +41,12 @@ const SystemNeighbors: FC<Props> = ({
             <div className="indicator">
               {
                 !!gate.kills.count &&
-                  <Chip icon={<ShipDeath />} label={gate.kills.count} variant="outlined" />
+                  <Chip
+                    className={gate.kills.isPotentialCamp ? "camped" : ""}
+                    icon={<ShipDeath />}
+                    label={gate.kills.count}
+                    variant="outlined"
+                  />
               }
             </div>
           </MenuItem>

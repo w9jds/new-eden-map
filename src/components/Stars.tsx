@@ -1,8 +1,7 @@
-/* eslint-disable react/no-unknown-property */
 import React, { FC, Fragment, useMemo, useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { BufferGeometry, Color, MathUtils,  Points, TextureLoader } from 'three';
+import { BufferGeometry, Color, MathUtils, Points, TextureLoader } from 'three';
 import { ThreeEvent, useFrame, useThree } from '@react-three/fiber';
 import { getSecurityColor } from 'utils/universe';
 
@@ -82,7 +81,7 @@ const Stars: FC<Props> = ({ ids }) => {
   const route = useSelector(getRoute);
 
   const { camera, raycaster, pointer } = useThree();
-  const [ starIndex, setHoveredStar ] = useState(undefined);
+  const [starIndex, setHoveredStar] = useState(undefined);
 
   const onStarClick = (e: ThreeEvent<MouseEvent>) => {
     dispatch(setSystem(details[+ids[e.index]]));
@@ -92,7 +91,7 @@ const Stars: FC<Props> = ({ ids }) => {
     const positions = [], radii = [], systemIds = [], alphas = [];
 
     for (const systemId of ids) {
-      const  { solarSystemID, position } = details[+systemId];
+      const { solarSystemID, position } = details[+systemId];
 
       radii.push(Radius.FOCUSED);
       alphas.push(Alpha.FOCUSED);

@@ -7,4 +7,4 @@ export const listenerMiddleware = createListenerMiddleware()
 export const { startListening, stopListening } = listenerMiddleware;
 
 require('./kills/listeners');
-// require('./navigation/listeners');
+require('./navigation/listeners');

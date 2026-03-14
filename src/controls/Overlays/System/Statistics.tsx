@@ -23,7 +23,8 @@ const SystemStatistics: FC<Props> = ({
           <ComposedChart className="kills-chart" data={data}>
             <Tooltip content={<ChartTooltip />}/>
             <XAxis hide dataKey="processedAt" />
-            <YAxis yAxisId="kills" hide orientation='left' />
+            <YAxis yAxisId="npcs" hide orientation='left' />
+            <YAxis yAxisId="player" hide orientation='left' />
             <YAxis yAxisId="jumps" hide orientation='right'/>
 
             <Bar
@@ -36,7 +37,7 @@ const SystemStatistics: FC<Props> = ({
             />
 
             <Line
-              yAxisId="kills"
+              yAxisId="npcs"
               type="monotone"
               dataKey="npcKills"
               stroke="#06e221"
@@ -45,7 +46,7 @@ const SystemStatistics: FC<Props> = ({
             />
 
             <Line
-              yAxisId="kills"
+              yAxisId="player"
               type="monotone"
               dataKey="podKills"
               stroke="#ff4c17"
@@ -54,7 +55,7 @@ const SystemStatistics: FC<Props> = ({
             />
 
             <Line
-              yAxisId="kills"
+              yAxisId="player"
               type="monotone"
               dataKey="shipKills"
               stroke="#ffb80d"

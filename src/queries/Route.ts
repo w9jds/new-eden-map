@@ -1,5 +1,6 @@
-import { gql, useLazyQuery } from '@apollo/client'
-import { RouteOptions, Stargate } from 'models/resolvers-types'
+import { gql } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client/react';
+import { RouteOptions, Stargate } from 'models/resolvers-types';
 
 type Args = {
   options: RouteOptions;

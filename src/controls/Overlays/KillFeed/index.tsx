@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion, Variants } from 'framer-motion';
 
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
@@ -11,7 +11,7 @@ import Card from './Card';
 
 import './index.scss';
 
-const Variants = {
+const variants: Variants = {
   initial: {
     x: 0,
     opacity: 1,
@@ -19,7 +19,7 @@ const Variants = {
   open: {
     x: 0,
     transition: {
-      type: 'easeInOut',
+      // type: 'easeInOut',
       stiffness: 320,
       damping: 30,
     },
@@ -27,7 +27,7 @@ const Variants = {
   closed: {
     x: '100%',
     transition: {
-      type: 'easeInOut',
+      // type: 'easeInOut',
       stiffness: 320,
       damping: 30,
       delay: 0.05,
@@ -65,7 +65,7 @@ const KillFeed = () => {
     <motion.div
       className="feed-drawer"
       key="drawer-content"
-      variants={Variants}
+      variants={variants}
       initial="initial"
       animate={animate}
       onAnimationStart={onStart}

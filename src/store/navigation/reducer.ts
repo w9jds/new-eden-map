@@ -34,7 +34,7 @@ const navigationSlice = createSlice({
       state.open = action.payload.state;
     }
   }
-})
+});
 
 export const { setFlag, setRoute, toggleNav } = navigationSlice.actions;
 

@@ -1,6 +1,6 @@
 import React, { FC, useMemo } from 'react';
 import { format } from 'date-fns';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 
 import KillingBlow from './KillingBlow';
 import Attackers from './Attackers';
@@ -13,7 +13,7 @@ type KillProps = {
   data: KillMail;
 }
 
-const Variants = {
+const variants: Variants = {
   initial: {
     opacity: 0,
     y: -200,
@@ -22,10 +22,14 @@ const Variants = {
     opacity: 1,
     y: 0,
     transition: {
-      type: 'easeInOut',
+      // type: 'easeInOut',
       stiffness: 300,
       damping: 25,
-      y: { type: 'easeInOut', stiffness: 300, damping: 25 }
+      y: { 
+        // type: 'easeInOut',
+        stiffness: 300, 
+        damping: 25 
+      }
     },
   },
   exit: {
@@ -54,7 +58,7 @@ const KillCard: FC<KillProps> = ({ data }) => {
     <motion.div
       key={data.killmail_id}
       className="killmail"
-      variants={Variants}
+      variants={variants}
       initial="initial"
       animate="animate"
       exit="exit"

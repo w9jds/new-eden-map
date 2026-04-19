@@ -91,9 +91,9 @@ const Stars: FC<Props> = ({ ids }) => {
     const positions = [], radii = [], systemIds = [], alphas = [];
 
     for (const systemId of ids) {
-      const { solarSystemID, position } = details[+systemId];
+      const { solarSystemID, position, radius } = details[+systemId];
 
-      radii.push(Radius.FOCUSED);
+      radii.push(radius * Radius.FOCUSED);
       alphas.push(Alpha.FOCUSED);
       positions.push(...position);
       systemIds.push(solarSystemID);
@@ -105,7 +105,7 @@ const Stars: FC<Props> = ({ ids }) => {
       alpha: new Float32Array(alphas),
       positions: new Float32Array(positions),
       colors: new Float32Array(ids.length * 3),
-    }
+    };
   }, [ids]);
 
   // useEffect(() => {
@@ -121,11 +121,11 @@ const Stars: FC<Props> = ({ ids }) => {
   // }, [positions, radii, colors, alpha])
 
   const getColor = (index: number) => {
-    const { solarSystemID, security, regionID } = details[+ids[index]];
+    const { solarSystemID, security, regionID, radius } = details[+ids[index]];
     const securityColor = getSecurityColor(security);
 
     if (!route?.length && !system) {
-      radii[index] = Radius.FOCUSED;
+      radii[index] = radius * Radius.FOCUSED;
       alpha[index] = Alpha.FOCUSED;
 
       const twikleScale = MathUtils.clamp(
@@ -143,7 +143,7 @@ const Stars: FC<Props> = ({ ids }) => {
     if (route?.length) {
       if (route.includes(solarSystemID)) {
         new Color(securityColor).toArray(colors, index * 3);
-        radii[index] = Radius.FOCUSED;
+        radii[index] = radius * Radius.FOCUSED;
         alpha[index] = Alpha.FOCUSED;
         return;
       }
@@ -151,13 +151,13 @@ const Stars: FC<Props> = ({ ids }) => {
 
     if (system && system.solarSystemID == solarSystemID) {
       new Color(securityColor).toArray(colors, index * 3);
-      radii[index] = Radius.FOCUSED;
+      radii[index] = radius * Radius.FOCUSED;
       alpha[index] = Alpha.FOCUSED;
       return;
     }
 
     new Color('#a1a1a1').toArray(colors, index * 3);
-    radii[index] = Radius.BACKGROUND;
+    radii[index] = radius * Radius.BACKGROUND;
     alpha[index] = Alpha.BACKGROUND;
   }
 

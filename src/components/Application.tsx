@@ -39,7 +39,8 @@ const Application = () => {
         frameloop='always'
         shadows={false}
         camera={{ up: [0, -1, 0], castShadow: false }}
-        gl={{ antialias: true, pixelRatio: window.devicePixelRatio, alpha: true }}
+        dpr={window.devicePixelRatio}
+        gl={{ antialias: true, alpha: true }}
       >
         <NewEden />
       </Canvas>

@@ -33,7 +33,7 @@ export const systemDetails: Record<number, System> = systems.reduce(
   (out, current) => {
     out[current.solarSystemID] = {
       ...current,
-      radius: current.radius / 1000500000000,
+      radius: current.radius / 5000000000000,
       position: [
         current.position[0] / 1000000000000000,
         -(current.position[1] / 1000000000000000),

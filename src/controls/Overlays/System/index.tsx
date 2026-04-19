@@ -1,7 +1,8 @@
 import React, { FC, useRef, useMemo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLazyQuery } from '@apollo/client';
+import { useLazyQuery } from '@apollo/client/react';
 
+import { LoadingSection } from 'controls/LoadingSection';
 import { Divider, Fab, Paper, Typography } from '@mui/material';
 import { Directions } from '@mui/icons-material';
 import SystemStatistics from './Statistics';
@@ -17,7 +18,6 @@ import { getCurrentSystem } from 'store/current/selectors';
 import { toggleNav } from 'store/navigation/reducer';
 
 import './index.scss';
-import { LoadingSection } from 'controls/LoadingSection';
 
 const SystemOverlay: FC = () => {
   const dispatch = useDispatch();
@@ -25,13 +25,15 @@ const SystemOverlay: FC = () => {
   const isNavigating = useSelector(isNavOpen);
   const prev = useRef(null);
 
-  const [getDetails, { loading, data }] = useLazyQuery<DetailsResponse>(DetailsQuery, {
-    variables: { ids: [system?.solarSystemID] },
-  });
+  const [getDetails, { loading, data }] = useLazyQuery<DetailsResponse, { ids: number[] }>(DetailsQuery);
 
   useEffect(() => {
     if (system && system.solarSystemID !== prev.current) {
-      getDetails();
+      getDetails({ 
+        variables: { 
+          ids: [system?.solarSystemID] 
+        }
+      });
     }
 
     prev.current = system?.solarSystemID;

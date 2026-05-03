@@ -1,5 +1,4 @@
 
-
 .system-neighbors {
   padding: 16px 0;
 
@@ -8,23 +7,30 @@
     padding: 0 24px 8px 24px;
   }
 
-  .result {
-    display: flex;
-    flex-direction: row;
-    padding: 4px 24px;
-    transition: all 0.2s ease-in-out;
+  .system-gate {
+    padding: 2px 24px;
+    height: 36px;
+    align-content: center;
 
-    .names {
-      flex: 1;
+    .status {
 
-      p {
-        font-weight: 300;
-      }
     }
 
-    &:hover {
-      cursor: pointer;
-      background-color: #ffffff0d;
+    .results > span {
+      flex: 1;
+      font-weight: 300;
+      opacity: 0.7;
+    }
+  }
+
+  .indicator {
+    .camped {
+      border-color: rgb(208, 28, 28);
+    }
+
+    svg {
+      height: 28px;
+      width: 28px;
     }
   }
 }

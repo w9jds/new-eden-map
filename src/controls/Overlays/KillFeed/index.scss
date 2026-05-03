@@ -1,13 +1,50 @@
-.kill-feed {
-  @import './Card.scss';
+@use "sass:meta";
+@use '../../../stylesheets/variables.scss';
 
-  display: flex;
-  flex-direction: column;
+.feed-drawer {
   position: absolute;
-  right: 12px;
+  background-color: rgba(66, 66, 66, 0.15);
+  height: 100vh;
+  padding: 0 8px;
+  width: 316px;
+  right: 0;
   top: 0;
 
-  overflow: auto;
-  max-height: calc(100vh - 12px);
-  margin: 12px 0;
+  .handle {
+    top: 8px;
+    left: -32px;
+    position: absolute;
+    background-color: rgba(66, 66, 66, 0.15);
+    height: 32px;
+    width: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    svg {
+      fill: white;
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  .kill-feed {
+    @include meta.load-css('Card.scss');
+
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    display: flex;
+    padding: 8px 0;
+    overflow-y: scroll;
+    flex-direction: column;
+    max-height: calc(100vh - 16px);
+  }
 }
+

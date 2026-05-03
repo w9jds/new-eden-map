@@ -1,6 +1,8 @@
-import React, { FC } from 'react';
+import React, { FC, useRef, useMemo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useLazyQuery } from '@apollo/client/react';
 
+import { LoadingSection } from 'controls/LoadingSection';
 import { Divider, Fab, Paper, Typography } from '@mui/material';
 import { Directions } from '@mui/icons-material';
 import SystemStatistics from './Statistics';
@@ -10,22 +12,43 @@ import Zkillboard from 'assets/zkill-logo.svg';
 import Dotlan from 'assets/dotlan-logo.svg';
 import background from 'assets/overlay-header.jpg';
 
+import { DetailsQuery, DetailsResponse } from 'queries/System';
 import { isNavOpen } from 'store/navigation/selectors';
 import { getCurrentSystem } from 'store/current/selectors';
-import { setDestination, toggleNav } from 'store/navigation/reducer';
+import { toggleNav } from 'store/navigation/reducer';
 
 import './index.scss';
 
-type Props = {};
-
-const SystemOverlay: FC<Props> = () => {
+const SystemOverlay: FC = () => {
   const dispatch = useDispatch();
   const system = useSelector(getCurrentSystem);
   const isNavigating = useSelector(isNavOpen);
+  const prev = useRef(null);
+
+  const [getDetails, { loading, data }] = useLazyQuery<DetailsResponse, { ids: number[] }>(
+    DetailsQuery,
+    {
+      fetchPolicy: 'cache-and-network',
+    }
+  );
+
+  useEffect(() => {
+    if (system && system.solarSystemID !== prev.current) {
+      getDetails({
+        variables: {
+          ids: [system?.solarSystemID]
+        }
+      });
+    }
+
+    prev.current = system?.solarSystemID;
+  }, [system]);
 
   const onNavigate = () => {
-    dispatch(setDestination(system.solarSystemID));
-    dispatch(toggleNav(true));
+    dispatch(toggleNav({
+      state: true,
+      defaultId: system.solarSystemID
+    }));
   }
 
   const onZKillboard = () => {
@@ -35,6 +58,25 @@ const SystemOverlay: FC<Props> = () => {
   const onDotlan = () => {
     window.open(`http://evemaps.dotlan.net/map/${system.regionName.replace(/\s/g, '_')}/${system.name.replace(/\s/g, '_')}#npc_delta`);
   }
+
+  const contents = useMemo(() => {
+    const details = data?.systems?.[0];
+
+    if (!system) {
+      return null;
+    }
+
+    if (loading || !data) {
+      return <LoadingSection />;
+    }
+
+    return (
+      <div className="information">
+        <SystemNeighbors stargates={details.stargates} />
+        <SystemStatistics data={[...details.statistics].reverse()} />
+      </div>
+    );
+  }, [loading, data])
 
   return !isNavigating && system && (
     <Paper className="system-overlay">
@@ -48,7 +90,6 @@ const SystemOverlay: FC<Props> = () => {
             {`${system.constellationName} - ${system.regionName}`}
           </Typography>
         </div>
-
         <div className="security">
           <Typography variant='body1'>
             {system.security.toFixed(1)}
@@ -67,10 +108,7 @@ const SystemOverlay: FC<Props> = () => {
           <Dotlan />
         </Fab>
       </div>
-      <div className="information">
-        <SystemNeighbors />
-        <SystemStatistics />
-      </div>
+      { contents }
     </Paper>
   )
 }

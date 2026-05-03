@@ -1,13 +1,19 @@
-@import '../../../stylesheets/variables.scss';
+@use '../../../stylesheets/variables.scss';
 
 .killmail {
   display: flex;
   padding: 0.8rem;
   position: relative;
-  margin-bottom: 8px;
   min-height: 135px;
-  width: 300px;
   overflow: hidden;
+  background-color: variables.$dark-paper;
+  border-radius: 0.4rem;
+  width: 300px;
+  color: white;
+
+  &:not(:last-of-type) {
+    margin-bottom: 8px;
+  }
 
   &:hover {
     cursor: pointer;
@@ -15,7 +21,7 @@
   }
 
   transition: all 0.18s ease-out;
-  @each $browser in $browser-prefixes {
+  @each $browser in variables.$browser-prefixes {
     #{$browser}transition: all 0.25s ease-out;
   }
 
@@ -39,13 +45,13 @@
     border: .2rem solid transparent;
 
     transition: all 0.18s ease-out;
-    @each $browser in $browser-prefixes {
+    @each $browser in variables.$browser-prefixes {
       #{$browser}transition: all 0.25s ease-out;
     }
 
     &:hover {
       cursor: pointer;
-      border-color: $primary-main;
+      border-color: variables.$primary-main;
     }
   }
 
@@ -118,7 +124,7 @@
         .participants-badge {
           display: flex;
           position: absolute;
-          background-color: $primary-dark;
+          background-color: variables.$primary-dark;
           border-radius: 50%;
           width: 1.5rem;
           height: 1.5rem;

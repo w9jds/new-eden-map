@@ -1,7 +1,7 @@
 export enum WarfareSystemStatus {
-  Captured = 'captured', 
-  Contested = 'contested', 
-  Uncontested = 'uncontested', 
+  Captured = 'captured',
+  Contested = 'contested',
+  Uncontested = 'uncontested',
   Vulnerable = 'vulnerable'
 }
 
@@ -11,7 +11,7 @@ export type System = {
   luminosity: number;
   radius: number;
   security: number;
-  position: number[];
+  position: [number, number, number];
   constellationName: string;
   constellationID: number;
   regionName: string;
@@ -21,30 +21,6 @@ export type System = {
   typeName: string;
   neighbors: number[];
 }
-
-export type SystemStatistics = {
-  sovereignty?: Sovereignty;
-  statistics?: Record<string, Statistics>;
-  factionWarfare?: FactionWarfare;
-}
-
-type FactionWarfare = {
-  contested: WarfareSystemStatus;
-  occupierFaction: string;
-  occupierFactionId: number;
-  ownerFaction: string;
-  ownerFactionId: number;
-  victoryPoints: number;
-  victoryPointsThreshold: number;
-}
-
-type Sovereignty = {
-  allianceId?: number;
-  allianceName?: string;
-  corporationId?: number;
-  corporationName?: string;
-}
-
 
 export type Region = {
   id: number;
@@ -73,3 +49,4 @@ export type Statistics = {
   }
   processed_at: number;
 }
+

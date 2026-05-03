@@ -11,7 +11,7 @@
     "strictNullChecks": false,
     "moduleResolution": "node",
     "outDir": "./build/dist",
-    "lib": ["es6", "es5", "dom"], 
+    "lib": ["es2016", "es5", "dom"], 
     "allowSyntheticDefaultImports": true,
     "baseUrl": "./",
     "paths": {

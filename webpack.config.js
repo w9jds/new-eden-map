@@ -76,7 +76,7 @@ module.exports = {
       filename: '[name].[hash].css',
       chunkFilename: '[id].css',
     }),
-    new webpack.HotModuleReplacementPlugin(),
+    // new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
       title: 'New Eden',
       filename: 'index.html',

@@ -1,3 +1,5 @@
+import { systems } from 'constants/systems';
+
 import React, { Fragment, useState, useMemo, useEffect } from 'react';
 import classnames from 'classnames';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,7 +9,6 @@ import { Button, Divider, Paper } from '@mui/material';
 import { Close } from '@mui/icons-material';
 
 import { System } from 'models/universe';
-import { systems } from 'constants/systems';
 import { setSystem } from 'store/current/reducer';
 import { isNavOpen } from 'store/navigation/selectors';
 import { getCurrentSystem } from 'store/current/selectors';
@@ -67,33 +68,34 @@ const SearchOverlay = () => {
   }
 
   return !isNavigating && (
-    <Paper className={overlay}>
-      <div className="search-bar">
-        <input className="search"
-          placeholder="Search New Eden"
-          value={value}
-          onChange={onSearchChange}/>
-
+    <div className="overlay-container">
+      <Paper className={overlay}>
+        <div className="search-bar">
+          <input className="search"
+            placeholder="Search New Eden"
+            value={value}
+            onChange={onSearchChange}
+          />
+          {
+            current && (
+              <Button variant="text" onClick={onClear}>
+                <Close />
+              </Button>
+            )
+          }
+        </div>
         {
-          current && (
-            <Button variant="text" onClick={onClear}>
-              <Close />
-            </Button>
+          isOpen && (
+            <Fragment>
+              <Divider />
+              <div className="search-results">
+                {options.map(option => <SystemTile key={option} onClick={onResultClick} systemId={option} />)}
+              </div>
+            </Fragment>
           )
         }
-      </div>
-
-      {
-        isOpen && (
-          <Fragment>
-            <Divider />
-            <div className="search-results">
-              {options.map(option => <SystemTile key={option} onClick={onResultClick} systemId={option} />)}
-            </div>
-          </Fragment>
-        )
-      }
-    </Paper>
+      </Paper>
+    </div>
   );
 }
 

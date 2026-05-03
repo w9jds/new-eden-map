@@ -1,41 +1,21 @@
-import React, { FC, Fragment, useMemo } from 'react';
+import React, { FC, Fragment } from 'react';
 
-import Stargates from './Connections';
+import { useRoute } from './Route';
 import Regions from './Regions';
-import Kills from './Kills';
+import Stargates from './Connections';
+import { useCamera } from './Camera';
+import { useKillPulses } from './Kills';
 
-import { System } from 'models/universe';
 
-type Props = {
-  systems: System[];
-}
-
-const NewEden: FC<Props> = ({ systems }) => {
-  const connections = useMemo(() => {
-    const segments = {};
-
-    for (let system of systems) {
-      if (system.neighbors) {
-        for (let destination of system.neighbors) {
-          if (!segments[destination] || segments[destination].indexOf(system.solarSystemID) == -1) {
-            if (!segments[system.solarSystemID]) {
-              segments[system.solarSystemID] = [destination];
-            } else {
-              segments[system.solarSystemID].push(destination);
-            }
-          }
-        }
-      }
-    }
-
-    return segments;
-  }, [systems]);
+const NewEden: FC = () => {
+  useCamera();
+  useKillPulses();
+  useRoute();
 
   return (
     <Fragment>
-      <Stargates connections={connections} />
-      <Kills />
       <Regions />
+      <Stargates />
     </Fragment>
   )
 };

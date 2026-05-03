@@ -1,0 +1,17 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="#FFFFFF">
+  <title>Ship Death Icon</title>
+
+  <g transform="rotate(15 50 50)"> <path d="M55,45 L60,40 L65,47 L70,42 L73,50 L70,58 L65,53 L60,60 Z" opacity="0.9"/>
+
+    <path d="M30,50 Q35,40 50,40 Q60,42 62,45 L50,50 L60,60 Q40,65 30,50 Z" />
+    <path d="M48,40 Q30,35 20,45 L30,50 L42,48 L48,40 Z" /> <polygon points="65,35 70,30 75,38" opacity="0.8" />
+    <polygon points="70,65 75,70 78,62" opacity="0.8" />
+    <polygon points="25,60 20,65 18,58" opacity="0.7" />
+    <polygon points="50,25 55,20 58,28" opacity="0.7" />
+
+    <circle cx="78" cy="28" r="2" opacity="0.6"/>
+    <circle cx="15" cy="70" r="1.5" opacity="0.6"/>
+    <path d="M80,50 L82,48 L81,52 Z" opacity="0.5" />
+
+  </g>
+</svg>

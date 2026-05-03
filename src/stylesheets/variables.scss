@@ -1,7 +1,22 @@
 $browser-prefixes: -webkit-, -moz-, -o-, -ms-;
 
 $paper-color: #323232;
+$dark-paper: #1e1e1e;
 
 $primary-light: #64b5f6;
 $primary-main: #2196f3;
 $primary-dark: #1976d2;
+
+$system_security: (
+  'one': #2e74df,
+  'zero-nine': #379cf6,
+  'zero-eight': #4acef5,
+  'zero-seven': #5cdca6,
+  'zero-six': #70e452,
+  'zero-five': #f1fe83,
+  'zero-four': #e0690e,
+  'zero-three': #ce450b,
+  'zero-two': #bc1112,
+  'zero-one': #6c2222,
+  'zero': #903066,
+)

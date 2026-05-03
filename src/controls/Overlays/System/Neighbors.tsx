@@ -1,26 +1,57 @@
-import React, { Fragment } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { FC, Fragment } from 'react';
+import { useDispatch } from 'react-redux';
 
-import { Divider, Typography } from '@mui/material';
-import { getCurrentSystem } from 'store/current/selectors';
-import SystemTile from 'controls/SystemTile';
-import { System } from 'models/universe';
+import ShipDeath from '../../../assets/ship-death.svg';
+import { Chip, Divider, ListItemIcon, ListItemText, Typography } from '@mui/material';
+import MenuItem from 'components/MenuItem';
+
+import { Stargate } from 'models/resolvers-types';
 import { setSystem } from 'store/current/reducer';
+import { systemDetails } from 'constants/systems';
 
-const SystemNeighbors = () => {
+type Props = {
+  stargates?: Stargate[];
+};
+
+const SystemNeighbors: FC<Props> = ({
+  stargates = []
+}) => {
   const dispatch = useDispatch();
-  const target = useSelector(getCurrentSystem);
 
-  const navigateTo = (e, system: System) => {
+  const navigateTo = (gate: Stargate) => {
+    const { id } = gate.destination.system;
+    const system = systemDetails[id];
     dispatch(setSystem(system));
   }
 
-  return target?.neighbors?.length > 0 && (
+  return stargates?.length > 0 && (
     <Fragment>
       <Divider />
       <div className="system-neighbors">
-        <Typography variant='h6'>Neighbors</Typography>
-        {target.neighbors.map(id => <SystemTile mini key={id} systemId={id} onClick={navigateTo} />)}
+        <Typography variant='h6'>Stargates</Typography>
+        {stargates.map(gate => (
+          <MenuItem key={gate.id} className="system-gate" onClick={() => navigateTo(gate)}>
+            <ListItemIcon className="status">
+              <span>
+                {gate.destination.system.securityStatus.toFixed(1)}
+              </span>
+            </ListItemIcon>
+            <ListItemText className="results">
+              {gate.destination.system.name}
+            </ListItemText>
+            <div className="indicator">
+              {
+                !!gate.kills.count &&
+                  <Chip
+                    className={gate.kills.isPotentialCamp ? "camped" : ""}
+                    icon={<ShipDeath />}
+                    label={gate.kills.count}
+                    variant="outlined"
+                  />
+              }
+            </div>
+          </MenuItem>
+        ))}
       </div>
     </Fragment>
   );

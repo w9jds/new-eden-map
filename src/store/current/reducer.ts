@@ -1,14 +1,16 @@
 import { FirebaseApp } from 'firebase/app';
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-import { System, SystemStatistics } from 'models/universe';
-import { CurrentState } from 'models/states';
+import { System } from 'models/universe';
+import { CurrentState, SpaceClusters } from 'models/states';
+import { systemDetails } from 'constants/systems';
 
 const initialState: CurrentState = {
   firebase: undefined,
 
   system: undefined,
-  statistics: undefined,
+  universe: systemDetails,
+  cluster: SpaceClusters.Known
 };
 
 const currentSlice = createSlice({
@@ -19,20 +21,17 @@ const currentSlice = createSlice({
       state.firebase = action.payload;
     },
 
-    setSystem: (state, action: PayloadAction<System>) => {
-      if (!action.payload) {
-        state.statistics = undefined;
-      }
-      
-      state.system = action.payload;
+    setCluster: (state, action: PayloadAction<SpaceClusters>) => {
+      state.cluster = action.payload;
     },
-    setStatistics: (state, action: PayloadAction<SystemStatistics>) => {
-      state.statistics = action.payload;
+
+    setSystem: (state, action: PayloadAction<System>) => {
+      state.system = action.payload;
     }
   }
 });
 
-export const { setFirebaseApp, setSystem, setStatistics } = currentSlice.actions;
+export const { setFirebaseApp, setSystem, setCluster } = currentSlice.actions;
 
 export default currentSlice;
 

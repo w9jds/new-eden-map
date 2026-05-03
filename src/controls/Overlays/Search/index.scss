@@ -1,17 +1,22 @@
-@import "../../../stylesheets/placeholders.scss";
+@use "../../../stylesheets/placeholders.scss";
 
-.search-overlay {
+.overlay-container {
+  display: flex;
+  align-items: flex-start;
+
   position: absolute;
-  border-radius: 24px !important;
-  background-color: #222 !important;
   z-index: 10000;
   left: 12px;
   top: 12px;
+}
+
+.search-overlay {
+  border-radius: 24px !important;
+  background-color: #222 !important;
+  margin-right: 8px;
 
   &.collapsed {
-
     .search-bar {
-
       button:last-of-type {
         border-radius: 0px 24px 24px 0px;
       }
@@ -20,7 +25,6 @@
 
   &.expanded {
     .search-bar {
-
       button:last-of-type {
         border-radius: 0px 24px 0px 0px;
       }
@@ -59,7 +63,7 @@
   .search-results {
     @extend %system-tile;
 
-    li:last-of-type {
+    .menu-item:last-of-type {
       border-radius: 0px 0px 24px 24px;
     }
   }

@@ -49,7 +49,9 @@ const Query = gql`
 `
 
 export const useRouteQuery = () => {
-  const [getRoute, { loading, data, error }] = useLazyQuery<Response, Args>(Query);
+  const [getRoute, { loading, data, error }] = useLazyQuery<Response, Args>(Query, {
+    fetchPolicy: 'cache-and-network'
+  });
 
   return {
     getRoute,

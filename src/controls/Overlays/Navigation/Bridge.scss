@@ -1,4 +1,4 @@
-
+@use "sass:color";
 
 .gate {
   position: absolute;
@@ -7,18 +7,18 @@
   height: 56px;
   width: 24px;
   z-index: 1;
-  top: 4px;
+  top: 12px;
 
   &:hover {
-    background-color: darken($color: #212121, $amount: 5%)
+    background-color: color.adjust($color: #212121, $lightness: -5%)
   }
 
   &.stagger-end {
-    right: 12px; 
+    right: 12px;
   }
 
   &.stagger-offset {
-    right: 48px;
+    right: 42px;
   }
 
   &-start {
@@ -42,13 +42,13 @@
   }
 
   .camped {
-    background-color: red;
+    background-color: #da3232;
   }
-  
+
   .active {
     outline-style: solid;
     outline-color: #da3232;
-    outline-offset: 3px;
+    outline-offset: -1px;
     outline-width: 2px;
   }
 }

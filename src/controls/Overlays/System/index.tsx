@@ -25,13 +25,18 @@ const SystemOverlay: FC = () => {
   const isNavigating = useSelector(isNavOpen);
   const prev = useRef(null);
 
-  const [getDetails, { loading, data }] = useLazyQuery<DetailsResponse, { ids: number[] }>(DetailsQuery);
+  const [getDetails, { loading, data }] = useLazyQuery<DetailsResponse, { ids: number[] }>(
+    DetailsQuery,
+    {
+      fetchPolicy: 'cache-and-network',
+    }
+  );
 
   useEffect(() => {
     if (system && system.solarSystemID !== prev.current) {
-      getDetails({ 
-        variables: { 
-          ids: [system?.solarSystemID] 
+      getDetails({
+        variables: {
+          ids: [system?.solarSystemID]
         }
       });
     }

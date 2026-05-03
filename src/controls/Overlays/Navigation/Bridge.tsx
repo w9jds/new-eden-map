@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { Stargate } from 'models/resolvers-types';
 
 import './Bridge.scss';
@@ -10,6 +10,10 @@ type Props = {
 }
 
 const GateBridge: FC<Props> = ({ gate, index }) => {
+  const visible = useMemo(
+    () => gate?.kills?.count !== 0 || gate?.destination?.kills?.count !== 0,
+    [gate]
+  );
 
   const start = classNames('gate-start', {
     'active': gate?.kills?.count > 0,
@@ -31,7 +35,7 @@ const GateBridge: FC<Props> = ({ gate, index }) => {
     e.preventDefault();
   }
 
-  return (
+  return visible && (
     <div className={bridge} onClick={onBridgeClick}>
       <div className={start}/>
       <div className={end}/>

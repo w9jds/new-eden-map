@@ -1,9 +1,9 @@
-@import "../../../stylesheets/variables.scss";
+@use "../../../stylesheets/variables.scss";
 
 .activity-tooltip {
   display: flex;
   flex-direction: column;
-  background-color: $paper-color;
+  background-color: variables.$paper-color;
   padding: 1.2rem;
 
   & > span {

@@ -1,6 +1,8 @@
 import React, { FC, useMemo } from 'react';
 import { systemDetails } from 'constants/systems';
-import { MenuItem, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
+import MenuItem from 'components/MenuItem';
+
 import { getClassName } from 'utils/universe';
 import { System } from 'models/universe';
 
@@ -24,7 +26,7 @@ const SystemTile: FC<Props> = ({
   }
 
   return (
-    <MenuItem id="system-tile" className="result" onClick={onSelect}>
+    <MenuItem className="result" onClick={onSelect}>
       <div className="names">
         <Typography variant="body1">
           {system.name}

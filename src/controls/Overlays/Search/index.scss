@@ -1,4 +1,4 @@
-@import "../../../stylesheets/placeholders.scss";
+@use "../../../stylesheets/placeholders.scss";
 
 .overlay-container {
   display: flex;
@@ -63,7 +63,7 @@
   .search-results {
     @extend %system-tile;
 
-    li:last-of-type {
+    .menu-item:last-of-type {
       border-radius: 0px 0px 24px 24px;
     }
   }

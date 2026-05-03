@@ -2,11 +2,12 @@ import { useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 
 import gsap from 'gsap';
-import { Vector3 } from 'three';
+import { Box3, PerspectiveCamera, Vector3 } from 'three';
 import { useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
-import { getCluster, getCurrentSystem } from 'store/current/selectors';
+import { getCluster, getCurrentSystem, getUniverse } from 'store/current/selectors';
+import { getRoute } from 'store/navigation/selectors';
 
 import { System } from 'models/universe';
 import { SpaceClusters } from 'models/states';
@@ -35,8 +36,11 @@ export const useCamera = () => {
   const { scene, camera, gl } = useThree();
   const current = useSelector(getCurrentSystem);
   const cluster = useSelector(getCluster);
+  const route = useSelector(getRoute);
+  const universe = useSelector(getUniverse);
 
   const prev = useRef<System>(undefined);
+  const prevRoute = useRef<number[]>([]);
   const tween = useRef<gsap.core.Tween>(undefined);
   const controls = useRef<OrbitControls>(undefined);
 
@@ -94,19 +98,23 @@ export const useCamera = () => {
     if (current && prev.current !== current) {
       const endTarget = new Vector3(...current.position);
 
+      const direction = camera.position.clone().sub(controls.current.target).normalize();
+      const focusDistance = 40;
+      const endPosition = endTarget.clone().addScaledVector(direction, focusDistance);
+
       const tweenTarget = { t: 0 };
       tween.current = gsap.to(tweenTarget, {
         t: 1,
-        duration: 3,
+        duration: 2,
         ease: "power2.inOut",
         onUpdate: function() {
           controls.current.target.lerpVectors(startTarget, endTarget, tweenTarget.t);
-          // camera.position.lerpVectors(startPosition, endPosition, tweenTarget.t);
+          camera.position.lerpVectors(startPosition, endPosition, tweenTarget.t);
           controls.current.update();
         },
         onComplete: function() {
           controls.current.target.copy(endTarget);
-          // camera.position.copy(endPosition);
+          camera.position.copy(endPosition);
           controls.current.update();
           tween.current = null;
         }
@@ -142,6 +150,118 @@ export const useCamera = () => {
 
     prev.current = current;
   }, [current]);
+
+  useEffect(() => {
+    if (!controls.current) return;
+
+    // Route cleared — animate back to the focused system or the full cluster view
+    if (!route?.length) {
+      if (!prevRoute.current.length) return;
+
+      if (tween.current) {
+        tween.current.kill();
+        tween.current = null;
+      }
+
+      const startTarget = controls.current.target.clone();
+      const startPosition = camera.position.clone();
+
+      let endTarget: Vector3;
+      let endPosition: Vector3;
+
+      if (current) {
+        endTarget = new Vector3(...current.position);
+        const direction = camera.position.clone().sub(controls.current.target).normalize();
+        endPosition = endTarget.clone().addScaledVector(direction, 40);
+      } else {
+        endTarget = Clusters[cluster].target.clone();
+        endPosition = Clusters[cluster].position.clone();
+      }
+
+      const tweenObj = { t: 0 };
+      tween.current = gsap.to(tweenObj, {
+        t: 1,
+        duration: 2.5,
+        ease: 'power2.inOut',
+        onUpdate: function() {
+          controls.current.target.lerpVectors(startTarget, endTarget, tweenObj.t);
+          camera.position.lerpVectors(startPosition, endPosition, tweenObj.t);
+          controls.current.update();
+        },
+        onComplete: function() {
+          controls.current.target.copy(endTarget);
+          camera.position.copy(endPosition);
+          controls.current.update();
+          tween.current = null;
+        }
+      });
+
+      prevRoute.current = [];
+      return;
+    }
+
+    if (!universe) return;
+
+    const positions = route
+      .filter(id => universe[id])
+      .map(id => new Vector3(...universe[id].position));
+
+    if (positions.length < 2) {
+      prevRoute.current = route;
+      return;
+    }
+
+    const box = new Box3().setFromPoints(positions);
+    const endTarget = new Vector3();
+    box.getCenter(endTarget);
+
+    const boxSize = new Vector3();
+    box.getSize(boxSize);
+
+    const cam = camera as PerspectiveCamera;
+    const fovV = cam.fov * (Math.PI / 180);
+    const fovH = 2 * Math.atan(Math.tan(fovV / 2) * cam.aspect);
+    const margin = 1.3;
+
+    const distForZ = ((boxSize.z / 2) * margin) / Math.tan(fovV / 2);
+    const distForX = ((boxSize.x / 2) * margin) / Math.tan(fovH / 2);
+    const distance = Math.min(
+      Math.max(distForZ, distForX, 40),
+      controls.current.maxDistance * 0.95
+    );
+
+    // Preserve the current viewing direction so OrbitControls sees no azimuth change
+    const currentDir = camera.position.clone().sub(controls.current.target).normalize();
+    const endPosition = endTarget.clone().addScaledVector(currentDir, distance);
+
+    if (tween.current) {
+      tween.current.kill();
+      tween.current = null;
+    }
+
+    const startTarget = controls.current.target.clone();
+    const startPosition = camera.position.clone();
+
+    const tweenObj = { t: 0 };
+    tween.current = gsap.to(tweenObj, {
+      t: 1,
+      duration: 2.5,
+      ease: 'power2.inOut',
+      onUpdate: function() {
+        controls.current.target.lerpVectors(startTarget, endTarget, tweenObj.t);
+        camera.position.lerpVectors(startPosition, endPosition, tweenObj.t);
+        controls.current.update();
+      },
+      onComplete: function() {
+        controls.current.target.copy(endTarget);
+        camera.position.copy(endPosition);
+        controls.current.update();
+        tween.current = null;
+      }
+    });
+
+    prevRoute.current = route;
+  }, [route]);
 
   useFrame(() => {
     if (!tween.current && controls.current) {

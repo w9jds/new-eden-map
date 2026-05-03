@@ -2,8 +2,9 @@ import React, { FC, useEffect, useMemo, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Close } from '@mui/icons-material';
-import { Button, ButtonGroup, Divider, ListItemIcon, ListItemText, MenuItem, Paper, TextField, Typography } from '@mui/material';
+import { Button, ButtonGroup, Divider, ListItemIcon, ListItemText, Paper, TextField, Typography } from '@mui/material';
 import SystemTile from 'controls/SystemTile';
+import MenuItem from 'components/MenuItem';
 
 import { System } from 'models/universe';
 import { RouteType, SolarSystem, Stargate } from 'models/resolvers-types';
@@ -144,7 +145,7 @@ const NavigationOverlay: FC = () => {
   }
 
   const onInputBlur = e => {
-    if (e?.relatedTarget?.id !== 'system-tile') {
+    if (!e.relatedTarget.classList.contains('menu-item')) {
       resetState();
     }
   }

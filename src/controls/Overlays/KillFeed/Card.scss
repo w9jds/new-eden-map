@@ -1,4 +1,4 @@
-@import '../../../stylesheets/variables.scss';
+@use '../../../stylesheets/variables.scss';
 
 .killmail {
   display: flex;
@@ -6,7 +6,7 @@
   position: relative;
   min-height: 135px;
   overflow: hidden;
-  background-color: $dark-paper;
+  background-color: variables.$dark-paper;
   border-radius: 0.4rem;
   width: 300px;
   color: white;
@@ -21,7 +21,7 @@
   }
 
   transition: all 0.18s ease-out;
-  @each $browser in $browser-prefixes {
+  @each $browser in variables.$browser-prefixes {
     #{$browser}transition: all 0.25s ease-out;
   }
 
@@ -45,13 +45,13 @@
     border: .2rem solid transparent;
 
     transition: all 0.18s ease-out;
-    @each $browser in $browser-prefixes {
+    @each $browser in variables.$browser-prefixes {
       #{$browser}transition: all 0.25s ease-out;
     }
 
     &:hover {
       cursor: pointer;
-      border-color: $primary-main;
+      border-color: variables.$primary-main;
     }
   }
 
@@ -124,7 +124,7 @@
         .participants-badge {
           display: flex;
           position: absolute;
-          background-color: $primary-dark;
+          background-color: variables.$primary-dark;
           border-radius: 50%;
           width: 1.5rem;
           height: 1.5rem;

@@ -2,7 +2,8 @@ import React, { FC, Fragment } from 'react';
 import { useDispatch } from 'react-redux';
 
 import ShipDeath from '../../../assets/ship-death.svg';
-import { Chip, Divider, ListItemIcon, ListItemText, MenuItem, Typography } from '@mui/material';
+import { Chip, Divider, ListItemIcon, ListItemText, Typography } from '@mui/material';
+import MenuItem from 'components/MenuItem';
 
 import { Stargate } from 'models/resolvers-types';
 import { setSystem } from 'store/current/reducer';

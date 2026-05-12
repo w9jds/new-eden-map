@@ -1,8 +1,11 @@
 import React, { FC, useMemo } from 'react';
 import { Stargate } from 'models/resolvers-types';
+import cn from 'classnames';
+
+import { styled, Tooltip, tooltipClasses, TooltipProps } from '@mui/material';
+import Details from './Details';
 
 import './Bridge.scss';
-import classNames from 'classnames';
 
 type Props = {
   index: number;
@@ -15,17 +18,17 @@ const GateBridge: FC<Props> = ({ gate, index }) => {
     [gate]
   );
 
-  const start = classNames('gate-start', {
+  const start = cn('gate-start', {
     'active': gate?.kills?.count > 0,
     'camped': gate?.kills?.isPotentialCamp,
   });
 
-  const end = classNames('gate-end', {
+  const end = cn('gate-end', {
     'active': gate?.destination?.kills?.count > 0,
     'camped': gate?.destination?.kills?.isPotentialCamp,
   });
 
-  const bridge = classNames('gate', {
+  const bridge = cn('gate', {
     'stagger-offset': (index + 1) % 2 !== 0,
     'stagger-end': (index + 1) % 2 === 0,
   });
@@ -35,11 +38,25 @@ const GateBridge: FC<Props> = ({ gate, index }) => {
     e.preventDefault();
   }
 
+  const PaperTooltip = styled(({ className, ...props }: TooltipProps) => (
+    <Tooltip describeChild {...props} classes={{ popper: className }} />
+  ))(({ theme }) => ({
+    [`& .${tooltipClasses.arrow}`]: {
+      color: '#222',
+    },
+    [`& .${tooltipClasses.tooltip}`]: {
+      backgroundColor: '#222',
+      maxWidth: 220,
+    },
+  }));
+
   return visible && (
-    <div className={bridge} onClick={onBridgeClick}>
-      <div className={start}/>
-      <div className={end}/>
-    </div>
+    <PaperTooltip arrow title={<Details bridge={gate} />} placement="right">
+      <div className={bridge} onClick={onBridgeClick}>
+        <div className={start}/>
+        <div className={end}/>
+      </div>
+    </PaperTooltip>
   );
 }
 

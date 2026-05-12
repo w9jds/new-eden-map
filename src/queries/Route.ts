@@ -22,13 +22,9 @@ const Query = gql`
         id
         name
         securityStatus
-        position {
-          x
-          y
-          z
-        }
       }
       destination {
+        name
         kills {
           count
           isPotentialCamp
@@ -37,11 +33,6 @@ const Query = gql`
           id
           name
           securityStatus
-          position {
-            x
-            y
-            z
-          }
         }
       }
     }

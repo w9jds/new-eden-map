@@ -1,0 +1,22 @@
+.details-tooltip {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin: 4px 6px;
+
+  .name {
+    font-size: 16px;
+    font-weight: 400;
+  }
+
+  .details {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    font-weight: 300;
+  }
+
+  .camped {
+    color: #da3232;
+  }
+}
